@@ -13,11 +13,11 @@ namespace ChatApp.Data.Repositories
 
         public IUserRepository UserRepository => new UserRepository(_db);
 
-        IPrivateMessageRepository PrivateMessageRepository => new PrivateMessageRepository(_db);
+        public IPrivateMessageRepository PrivateMessageRepository => new PrivateMessageRepository(_db);
 
-        IRoomMessageRepository RoomMessageRepository =>  new RoomMessageRepository(_db);
+        public IRoomMessageRepository RoomMessageRepository =>  new RoomMessageRepository(_db);
 
-        IChatRoomRepository ChatRoomRepository => throw new ChatRoomRepository(_db);
+        public IChatRoomRepository ChatRoomRepository => new ChatRoomRepository(_db);
 
         public async Task<bool> Complete()
         {

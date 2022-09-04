@@ -2,10 +2,10 @@
 {
     public interface IUnitOfWork
     {
-        IPrivateMessageRepository PrivateMessage { get; }
-        IRoomMessageRepository RoomMessage { get; }
+        IPrivateMessageRepository PrivateMessageRepository { get; }
+        IRoomMessageRepository RoomMessageRepository { get; }
         IUserRepository UserRepository { get; }
-        IChatRoomRepository ChatRoom { get; }
+        IChatRoomRepository ChatRoomRepository { get; }
 
         Task<bool> Complete();
         bool HasChanges();

@@ -2,8 +2,13 @@ using chat_application.Models;
 using ChatApp.Data;
 using ChatApp.Services;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
+using ChatApp.Interfaces;
+using ChatApp.Data.Repositories;
+using ChatApp.Hubs;
+using ChatApp.Dtos;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +18,12 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+
+builder.Services.AddResponseCompression(options =>
+{
+    options.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(
+        new[] { "application/octet-stream" });
+});
 
 builder.Services.AddSignalR();
 
@@ -28,9 +39,12 @@ builder.Services.AddIdentity<User, IdentityRole<int>>(options =>
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultTokenProviders();
 
-builder.Services.AddTransient<IEmailSender, EmailSender>();
 
+
+builder.Services.AddTransient<IEmailSender, EmailSender>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddSingleton<IDictionary<string, ConnectedUserDto>>(options => new Dictionary<string, ConnectedUserDto>());
+
 
 //builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
