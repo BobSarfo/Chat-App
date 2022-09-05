@@ -13,15 +13,18 @@ namespace ChatApp.Controllers
 {
     public class ChatController : Controller
     {
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IChatRoomService _chatRoomService;
+        private readonly IRoomMessageService _roomMessageService;
         private readonly IHubContext<MessageHub> _messageHub;
         private readonly IDictionary<string, ConnectedUserDto> _connections;
 
-        public ChatController(IUnitOfWork unitOfWork,
+        public ChatController(IChatRoomService chatRoomService,
+            IRoomMessageService roomMessageService,
             IHubContext<MessageHub> messageHub,
             IDictionary<string, ConnectedUserDto> connections)
         {
-            _unitOfWork = unitOfWork;
+            _chatRoomService = chatRoomService;
+            _roomMessageService = roomMessageService;
             _messageHub = messageHub;
             _connections = connections;
         }
@@ -37,9 +40,10 @@ namespace ChatApp.Controllers
             }
             else
             {
-                var chatRooms = await _unitOfWork.ChatRoomRepository.GetAllChatRoomsAsync();
-                //change this function to meessage repository
-                var foundRoomMessages = await _unitOfWork.ChatRoomRepository.GetMessagesFromRoomIdAsync(1);
+                var defaultSeededRoomId = 1;
+                var chatRooms = await _chatRoomService.GetAllChatRoomsAsync();
+
+                var foundRoomMessages = await _roomMessageService.GetRoomMessagesByIdAsync(defaultSeededRoomId);
 
                 if (foundRoomMessages is not null)
                 {
@@ -64,30 +68,35 @@ namespace ChatApp.Controllers
         }
 
         [HttpPost]
-        public JsonResult CreateGroupMessage([FromBody] CreateRoomMessageDto createRoomMessage)
+        public async Task<JsonResult> CreateGroupMessage([FromBody] CreateRoomMessageDto createRoomMessage)
         {
             var all = _connections;
             var connStr = _connections.GetConnectionStringByUserName(User.GetUsername());
 
 
 
-            var message = new RoomMessage
+            var roomMessage = new RoomMessage
             {
-                Message = createRoomMessage.Message,              
-                 IsStockCode = true,
+                Message = createRoomMessage.Message,
+                IsStockCode = true,
+                ChatRoomId = createRoomMessage.RoomId,
             };
+
 
             if (connStr is not null && _connections.TryGetValue(connStr, out ConnectedUserDto connectedUser))
             {
-                message.SenderId = connectedUser.UserId;
-                message.SenderUsername = connectedUser.UserName;
+                roomMessage.SenderId = connectedUser.UserId;
+                roomMessage.SenderUsername = connectedUser.UserName;
 
-                message.ChatRoomId = connectedUser.SelectedRoomName ,
-                _messageHub.Clients.Group(createRoomMessage.RoomName)
-                    .SendAsync("ReceiveGroupMessage", createRoomMessage.Message, connectedUser);
+                await _roomMessageService.CreateRoomMessage(createRoomMessage.RoomId, roomMessage);
+                await _messageHub.Clients.Group(connectedUser.SelectedRoomName)
+                    .SendAsync("ReceiveGroupMessage", new {
+                        message =  roomMessage.Message,
+                        username = roomMessage.SenderUsername,
+                        timeStamp = roomMessage.Timestamp.ToString("g")
+                    });
             }
 
-            //return JsonResult();
             return Json(new { status = 1, message = "success" });
 
         }

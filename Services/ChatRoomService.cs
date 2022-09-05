@@ -1,14 +1,15 @@
 ﻿using chat_application.Models;
+using ChatApp.Data;
 using ChatApp.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 
-namespace ChatApp.Data.Repositories
+namespace ChatApp.Services
 {
-    public class ChatRoomRepository : IChatRoomRepository
+    public class ChatRoomService : IChatRoomService
     {
         private readonly ApplicationDbContext _db;
-        public ChatRoomRepository(ApplicationDbContext db)
+        public ChatRoomService(ApplicationDbContext db)
         {
             _db = db;
         }
@@ -44,13 +45,7 @@ namespace ChatApp.Data.Repositories
 
             return true;
         }
-       
-        public async Task<List<RoomMessage?>?> GetMessagesFromRoomIdAsync(int roomId, int load = 50)
-        {
-            var foundMessages = await _db.ChatRooms
-               .SelectMany(x => x.Messages.DefaultIfEmpty()).Where(x => x.ChatRoomId == roomId).Take(load).OrderByDescending(x => x.Timestamp).ToListAsync();
 
-            return foundMessages;
-        }
+
     }
 }

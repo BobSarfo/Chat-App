@@ -52,17 +52,20 @@ else
                     </div>
                 </div>
 
-
+                @{
+                    var messageList = Model.RoomMessages;
+                    messageList.Reverse();
+                }
                 <div class="mesgs">
                     <div class="msg_history">
-                        @foreach (var message in Model.RoomMessages)
+                        @foreach (var message in messageList)
                         {
 
                             if (message.SenderId == User.GetUserId())
                             {
                                 <div class="outgoing_msg">
                                     <div class="sent_msg">
-                                        <p>@message.</p>
+                                        <p>@message.Message</p>
                                         <span class="time_date"> @message.SenderUsername | @message.Timestamp</span>
                                     </div>
                                 </div>
@@ -73,7 +76,7 @@ else
                                     <div class="incoming_msg_img"> <img src="https://www.freeiconspng.com/thumbs/profile-icon-png/profile-icon-9.png" alt="user"> </div>
                                     <div class="received_msg">
                                         <div class="received_withd_msg">
-                                            <p>@message.</p>
+                                            <p>@message.Message</p>
                                             <span class="time_date"> @message.SenderUsername | @message.Timestamp</span>
                                         </div>
                                     </div>
@@ -167,7 +170,6 @@ else
                     roomName: "@Model.SelectedRoom;",
                     message: message
                 }
-                console.log(createRoomMessageDto);
                 $.ajax({
                     type: "POST",
                     url: "/Chat/CreateGroupMessage",
@@ -176,7 +178,8 @@ else
                     dataType: "json",
                     success: function(response) {
                         if (response != null) {
-                            alert(response);
+
+
                         } else {
                             alert("Something went wrong");
                         }
@@ -188,9 +191,7 @@ else
                         alert(response.responseText);
                     }
                 });
-                let chatMessage = CreateOutgoingMessage(message, "robert", new Date().toGMTString())
-                $(".msg_history").append(chatMessage)
-                ScrollToDown();
+
             }
 
 
@@ -236,23 +237,23 @@ else
                 .withUrl("/hubs/message")
                 .build();
 
-
+            //Realtime listners
             connection.on("ReceiveGroupMessage", (data) => {
-                console.log(data);
 
-            })
+                let chatMessage = "";
+                if (data.username === "@User.GetUsername()") {
 
-            //function IsConnected()  {
-            //    return connection.State == HubConnectionState.Connected;
-            //}
+                    chatMessage = CreateOutgoingMessage(data.message, data.username, data.timeStamp);
+                } else {
+                    chatMessage = CreateIncomingMessage(data.message, data.username, data.timeStamp);
+                }
 
-            //async function TaskSend() {
-            //    if (connection != null)
-            //        await hubConnection.SendAsync("SendMessage", userInput, messageInput);
-            //}
+                $(".msg_history").append(chatMessage)
+                ScrollToDown();
 
-            connection.start();      
+            })          
 
+            connection.start();
 
         })
     </script>

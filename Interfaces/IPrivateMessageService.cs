@@ -3,7 +3,7 @@ using System.Linq.Expressions;
 
 namespace ChatApp.Interfaces
 {
-    public interface IPrivateMessageRepository
+    public interface IPrivateMessageService
     { 
     }
 }

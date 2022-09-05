@@ -1,14 +1,13 @@
 using chat_application.Models;
 using ChatApp.Data;
+using ChatApp.Dtos;
+using ChatApp.Hubs;
+using ChatApp.Interfaces;
 using ChatApp.Services;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
-using ChatApp.Interfaces;
-using ChatApp.Data.Repositories;
-using ChatApp.Hubs;
-using ChatApp.Dtos;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -42,7 +41,11 @@ builder.Services.AddIdentity<User, IdentityRole<int>>(options =>
 
 
 builder.Services.AddTransient<IEmailSender, EmailSender>();
-builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+builder.Services.AddScoped<IChatRoomService, ChatRoomService>();
+builder.Services.AddScoped<IRoomMessageService, RoomMessageService>();
+builder.Services.AddScoped<IPrivateMessageService, PrivateMessageService>();
+
 builder.Services.AddSingleton<IDictionary<string, ConnectedUserDto>>(options => new Dictionary<string, ConnectedUserDto>());
 
 builder.Services.AddRazorPages();

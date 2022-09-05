@@ -25,7 +25,10 @@ namespace ChatApp.Hubs
             
             _connections.TryAdd(Context.ConnectionId, connectedUser);
 
+            AddToRoom(connectedUser);
+
             Clients.All.SendAsync("UsersOnline", GetAllConnectedUsers());
+           
             return base.OnConnectedAsync();
         }
 
@@ -58,16 +61,16 @@ namespace ChatApp.Hubs
             }
         }
 
-        public async Task AddToRoomAsync(ConnectedUserDto connectedUser)
+        public void AddToRoom(ConnectedUserDto connectedUser)
         {
             //room , username
-            await Groups.AddToGroupAsync(Context.ConnectionId, connectedUser.SelectedRoomName);
+             Groups.AddToGroupAsync(Context.ConnectionId, connectedUser.SelectedRoomName);
             if (!_connections.ContainsKey(Context.ConnectionId))
             {
                 _connections.Add(Context.ConnectionId, connectedUser);
             }
 
-            await Clients.Group(connectedUser.SelectedRoomName).SendAsync("ReceiveGroupMember",$"{connectedUser.UserName} joined room");
+            Clients.Group(connectedUser.SelectedRoomName).SendAsync("ReceiveGroupMember",$"{connectedUser.UserName} joined room");
         }
     }
 }

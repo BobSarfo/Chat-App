@@ -11,7 +11,8 @@ namespace chat_application.Extensions
 
         public static int GetUserId(this ClaimsPrincipal user)
         {
-            return int.Parse(user.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+            int.TryParse(user.FindFirst(ClaimTypes.NameIdentifier)?.Value,out int userId);
+            return userId;
         }
     }
 }

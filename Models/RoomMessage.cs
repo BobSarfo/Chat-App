@@ -12,7 +12,7 @@ namespace chat_application.Models
         [Column(TypeName = "varchar(256)")]
         public string SenderUsername { get; set; }
         public bool IsStockCode { get; set; }
-        public DateTime Timestamp { get; set; }
+        public DateTime Timestamp { get; set; } = DateTime.UtcNow;  
 
         [DataType(DataType.Text)]
         public string Message { get; set; } 

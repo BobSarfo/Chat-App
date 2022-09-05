@@ -2,7 +2,7 @@
 
 namespace ChatApp.Interfaces
 {
-    public interface IUserRepository
+    public interface IUserService
     {
         Task<IEnumerable<User>> GetUsersAsync();
         Task<User> GetUserByIdAsync(int id);

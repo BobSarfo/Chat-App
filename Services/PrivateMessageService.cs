@@ -1,15 +1,16 @@
 ﻿using chat_application.Models;
+using ChatApp.Data;
 using ChatApp.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Threading.Tasks;
 
-namespace ChatApp.Data.Repositories
+namespace ChatApp.Services
 {
-    public class PrivateMessageRepository : IPrivateMessageRepository
+    public class PrivateMessageService : IPrivateMessageService
     {
         private readonly ApplicationDbContext _db;
-        public PrivateMessageRepository(ApplicationDbContext db)
+        public PrivateMessageService(ApplicationDbContext db)
         {
             _db = db;
         }
@@ -25,16 +26,16 @@ namespace ChatApp.Data.Repositories
 
         }
 
-        public void AddMessagesOfUserAndReciepientAsync(int userId, int receiverId, string message, bool isStockCode = false) 
+        public void AddMessagesOfUserAndReciepientAsync(int userId, int receiverId, string message, bool isStockCode = false)
         {
-            var chatMessage = new PrivateMessage 
+            var chatMessage = new PrivateMessage
             {
-                 SenderId = userId,
-                 ReceiverId = receiverId,
+                SenderId = userId,
+                ReceiverId = receiverId,
             };
 
         }
-        
+
 
     }
 }
