@@ -11,11 +11,11 @@ namespace chat_application.Models
         public int SenderId { get; set; }
 
         [Column(TypeName = "varchar(256)")]
-        public String SenderUserName { get; set; }
+        public String SenderUsername { get; set; }
         public int ReceiverId { get; set; }
 
         [Column(TypeName = "varchar(256)")]
-        public string ReceiverUserName { get; set; }
+        public string ReceiverUsername { get; set; }
         
         [DataType(DataType.Text)]
         public string Message { get; set; }

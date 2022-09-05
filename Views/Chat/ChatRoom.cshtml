@@ -1,0 +1,260 @@
+﻿@using Microsoft.AspNetCore.Html
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.SignalR.Client
+@using chat_application.Extensions
+@using chat_application.Models
+@inject SignInManager<User> SignInManager
+@inject UserManager<User> UserManager
+
+@model ChatApp.Dtos.ChatRoomDto
+@{
+    ViewData["Title"] = "ChatRoom";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@if (!SignInManager.IsSignedIn(User))
+{
+    <h5>Please login to use chat</h5>
+
+    <a class="btn btn-primary" asp-area="Identity" asp-page="/Account/Login">Login</a>
+}
+else
+{
+    <div class="container">
+        <h5 class=" text-center">Chat Rooms</h5>
+        <div class="messaging">
+            <div class="inbox_msg">
+                <div class="inbox_people">
+                    <div class="headind_srch">
+                        <div class="recent_heading">
+                            <h4>Chat Rooms Online</h4>
+                        </div>
+                        <div class="recent_heading_right">
+                            <span class="btn btn-sm btn-primary add-room">Add Room</span>
+
+                        </div>
+                    </div>
+                    <div class="inbox_chat">
+                        @foreach (var chatRoom in Model.RoomNames)
+                        {
+                            <div class="chat_list" id=@chatRoom.Id>
+                                <div class="chat_people">
+                                    <div class="chat_img"> <img src="https://www.freeiconspng.com/thumbs/profile-icon-png/profile-icon-9.png" alt="user"> </div>
+                                    <div class="chat_ib">
+                                        <h5 class="mt-1 align-middle">
+                                            @Html.DisplayFor(modelItem => chatRoom.GroupName)
+                                            <span class="btn btn-sm btn-primary select-group" id=@chatRoom.Id>Select User</span>
+                                        </h5>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+
+
+                <div class="mesgs">
+                    <div class="msg_history">
+                        @foreach (var message in Model.RoomMessages)
+                        {
+
+                            if (message.SenderId == User.GetUserId())
+                            {
+                                <div class="outgoing_msg">
+                                    <div class="sent_msg">
+                                        <p>@message.</p>
+                                        <span class="time_date"> @message.SenderUsername | @message.Timestamp</span>
+                                    </div>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="incoming_msg">
+                                    <div class="incoming_msg_img"> <img src="https://www.freeiconspng.com/thumbs/profile-icon-png/profile-icon-9.png" alt="user"> </div>
+                                    <div class="received_msg">
+                                        <div class="received_withd_msg">
+                                            <p>@message.</p>
+                                            <span class="time_date"> @message.SenderUsername | @message.Timestamp</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        }
+
+
+                        <div class="outgoing_msg">
+                            <div class="sent_msg">
+                                <p>
+                                    Test which is a new approach to have all
+                                    solutions
+                                </p>
+                                <span class="time_date"> 11:01 AM    |    June 9</span>
+                            </div>
+                        </div>
+
+
+                        <div class="incoming_msg">
+                            <div class="incoming_msg_img"> <img src="https://www.freeiconspng.com/thumbs/profile-icon-png/profile-icon-9.png" alt="user"> </div>
+                            <div class="received_msg">
+                                <div class="received_withd_msg">
+                                    <p>Test, which is a new approach to have</p>
+                                    <span class="time_date"> 11:01 AM    |    Yesterday</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="incoming_msg">
+                            <div class="incoming_msg_img"> <img src="https://www.freeiconspng.com/thumbs/profile-icon-png/profile-icon-9.png" alt="user"> </div>
+                            <div class="received_msg">
+                                <div class="received_withd_msg">
+                                    <p>
+                                        We work directly with our designers and suppliers,
+                                        and sell direct to you, which means quality, exclusive
+                                        products, at a price anyone can afford.
+                                    </p>
+                                    <span class="time_date"> 11:01 AM    |    Today</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="type_msg">
+                        <div class="input_msg_write">
+                            @*<form class="form-inline" asp-area="Identity" >*@
+                            <input type="text" class="form-control form-control-flush p-2" placeholder="Type a message" />
+                            <button type="submit" class="btn btn-link text-dark">Send Message</button>
+                            <span class="text-muted">Press enter to send</span>
+                            @*</form>*@
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+}
+
+@section Scripts{
+    <script type="text/javascript">
+
+        $(function() {
+
+            //Selectors
+            $(".select-group").click(function(e) {
+
+                console.log("ho");
+                let selectedId = e.target.id;
+
+                $(`.chat_list:not(#${selectedId})`).removeClass("active_chat");
+                $(`.chat_list#${selectedId}`).addClass("active_chat");
+                ScrollToDown()
+
+            });
+
+
+            $('input:text').keypress(function(e) {
+                if (e.which == 13) {
+                    let inputVal = $('input:text').val()
+                    SendMessage(inputVal)
+                    $('input:text').val("")
+                }
+            })
+
+
+            //Controller Calls
+            function SendMessage(message) {
+                const createRoomMessageDto = {
+                    roomId: parseInt("@Model.SelectedRoomId;"),
+                    roomName: "@Model.SelectedRoom;",
+                    message: message
+                }
+                console.log(createRoomMessageDto);
+                $.ajax({
+                    type: "POST",
+                    url: "/Chat/CreateGroupMessage",
+                    data: JSON.stringify(createRoomMessageDto),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function(response) {
+                        if (response != null) {
+                            alert(response);
+                        } else {
+                            alert("Something went wrong");
+                        }
+                    },
+                    failure: function(response) {
+                        alert(response.responseText);
+                    },
+                    error: function(response) {
+                        alert(response.responseText);
+                    }
+                });
+                let chatMessage = CreateOutgoingMessage(message, "robert", new Date().toGMTString())
+                $(".msg_history").append(chatMessage)
+                ScrollToDown();
+            }
+
+
+            //Templates
+            function CreateIncomingMessage(message, userName, dateTime) {
+                let messageTemplate = ""
+                messageTemplate += "<div class='incoming_msg' >"
+                messageTemplate += "<div class='incoming_msg_img'> <img src='https://www.freeiconspng.com/thumbs/profile-icon-png/profile-icon-9.png' alt='user'> </div>"
+                messageTemplate += "<div class='received_msg'>"
+                messageTemplate += "<div class='received_withd_msg'>"
+                messageTemplate += `<p>${message}</p>`
+                messageTemplate += `<span class="time_date"> ${userName} | ${dateTime}</span></div >`
+                messageTemplate += "</div> </div >";
+
+                return messageTemplate;
+            }
+
+            function CreateOutgoingMessage(message, userName, dateTime) {
+                let messageTemplate = ""
+                messageTemplate += "<div class='outgoing_msg'>"
+                messageTemplate += "<div class='sent_msg'>"
+                messageTemplate += `<p>${message}</p>`
+                messageTemplate += `<span class='time_date'> ${userName} | ${dateTime}</span>`
+                messageTemplate += "</div></div>"
+
+                return messageTemplate;
+            }
+
+
+            //utility functions
+            function ScrollToDown() {
+                var container = $('.msg_history')[0];
+                var containerHeight = container.clientHeight;
+                var contentHeight = container.scrollHeight;
+                container.scrollTop = contentHeight - containerHeight;
+            }
+
+
+            //Signal R
+            var _connectionId = '';
+
+            const connection = new signalR.HubConnectionBuilder()
+                .withUrl("/hubs/message")
+                .build();
+
+
+            connection.on("ReceiveGroupMessage", (data) => {
+                console.log(data);
+
+            })
+
+            //function IsConnected()  {
+            //    return connection.State == HubConnectionState.Connected;
+            //}
+
+            //async function TaskSend() {
+            //    if (connection != null)
+            //        await hubConnection.SendAsync("SendMessage", userInput, messageInput);
+            //}
+
+            connection.start();      
+
+
+        })
+    </script>
+}
+

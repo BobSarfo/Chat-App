@@ -15,5 +15,19 @@ namespace ChatApp.Data
         public DbSet<PrivateMessage> PrivateMessage { get; set; }
         public DbSet<RoomMessage> RoomMessages { get; set; }
         public DbSet<ChatRoom> ChatRooms { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            builder.Entity<ChatRoom>().HasData(
+               new ChatRoom
+               {
+                   GroupName = "General",
+                   DateCreated = DateTime.UtcNow,
+                   Id = 1
+               }
+           );
+            base.OnModelCreating(builder);
+        }
+
     }
 }

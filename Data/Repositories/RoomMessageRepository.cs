@@ -1,4 +1,5 @@
-﻿using ChatApp.Interfaces;
+﻿using chat_application.Models;
+using ChatApp.Interfaces;
 
 namespace ChatApp.Data.Repositories
 {
@@ -9,5 +10,6 @@ namespace ChatApp.Data.Repositories
         {
             _db = db;
         }
+
     }
 }

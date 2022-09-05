@@ -15,17 +15,20 @@ namespace ChatApp.Hubs
         }
         public override Task OnConnectedAsync()
         {
-            var conn = new ConnectedUserDto
+            var connectedUser = new ConnectedUserDto
             {
                 ConnectionId = Context.ConnectionId,
                 UserName = Context.User.GetUsername(),
                 UserId = Context.User.GetUserId(),
                 SelectedRoomName = "General"
             };
-            _connections.TryAdd(Context.ConnectionId, conn);
+            
+            _connections.TryAdd(Context.ConnectionId, connectedUser);
 
+            Clients.All.SendAsync("UsersOnline", GetAllConnectedUsers());
             return base.OnConnectedAsync();
         }
+
 
         public override Task OnDisconnectedAsync(Exception? exception)
         {
@@ -33,11 +36,11 @@ namespace ChatApp.Hubs
             return base.OnDisconnectedAsync(exception);
         }
 
-        public void BroadCastMessage(string message)
-        {
-            Clients.All.SendAsync("ReceiveBroadcastMessage", message, message, message, message);
-        }
 
+        public List<ConnectedUserDto> GetAllConnectedUsers() => _connections.Values.ToList();
+
+
+        //sample caller codes
         public async Task SendMessageToRoom(string message)
         {
             if (_connections.TryGetValue(Context.ConnectionId, out ConnectedUserDto connectedUser))
