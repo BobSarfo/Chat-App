@@ -235,7 +235,43 @@ else
 
             const connection = new signalR.HubConnectionBuilder()
                 .withUrl("/hubs/message")
+                .withAutomaticReconnect([0, 2000, 5000, 10000, 15000, 30000])
                 .build();
+
+            //reconnecting
+            connection.onreconnecting(error => {
+                console.assert(connection.state === signalR.HubConnectionState.Reconnecting);
+
+                $('input:text').disabled = true;
+
+                $('input:text').html(`Connection lost due to error "${error}". Reconnecting.`);
+            });
+
+            //reconnected
+            connection.onreconnected(connectionId => {
+                console.assert(connection.state === signalR.HubConnectionState.Connected);
+
+                $('input:text').disabled = false;
+
+                const li = document.createElement("li");
+                $('input:text').html(`Connection reestablished. Connected with connectionId "${connectionId}".`)
+
+            });
+
+
+            //Keep tab active
+            var lockResolver;
+            if (navigator && navigator.locks && navigator.locks.request) {
+                const promise = new Promise((res) => {
+                    lockResolver = res;
+                });
+
+                navigator.locks.request('unique_lock_name', { mode: "shared" }, () => {
+                    return promise;
+                });
+            }
+
+
 
             //Realtime listners
             connection.on("ReceiveGroupMessage", (data) => {
@@ -251,7 +287,7 @@ else
                 $(".msg_history").append(chatMessage)
                 ScrollToDown();
 
-            })          
+            })
 
             connection.start();
 

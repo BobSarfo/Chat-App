@@ -8,6 +8,10 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
+using Plain.RabbitMQ;
+using RabbitMQ.Client;
+using System.Security.Policy;
+using Publisher = Plain.RabbitMQ.Publisher;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -45,6 +49,22 @@ builder.Services.AddTransient<IEmailSender, EmailSender>();
 builder.Services.AddScoped<IChatRoomService, ChatRoomService>();
 builder.Services.AddScoped<IRoomMessageService, RoomMessageService>();
 builder.Services.AddScoped<IPrivateMessageService, PrivateMessageService>();
+
+
+builder.Services.AddSingleton<IConnectionProvider>(
+    new ConnectionProvider(builder.Configuration.GetValue<string>("RabbitMqConfigUrl")));
+
+builder.Services.AddSingleton<IPublisher>(x => new Publisher(x.GetService<IConnectionProvider>(),
+        "chat_exchange",
+        ExchangeType.Topic));
+
+builder.Services.AddSingleton<ISubscriber>(x => new Subscriber(x.GetService<IConnectionProvider>(),
+    "stockbot_exchange",
+    "stockbot_queue",
+    "stockbotmessage",
+    ExchangeType.Topic));
+
+builder.Services.AddHostedService<ChatListner>();
 
 builder.Services.AddSingleton<IDictionary<string, ConnectedUserDto>>(options => new Dictionary<string, ConnectedUserDto>());
 
