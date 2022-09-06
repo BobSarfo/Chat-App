@@ -44,13 +44,13 @@ builder.Services.AddIdentity<User, IdentityRole<int>>(options =>
 
 
 
-builder.Services.AddTransient<IEmailSender, EmailSender>();
+builder.Services.AddTransient<IEmailSender, FakeEmailSender>();
 
 builder.Services.AddScoped<IChatRoomService, ChatRoomService>();
 builder.Services.AddScoped<IRoomMessageService, RoomMessageService>();
 builder.Services.AddScoped<IPrivateMessageService, PrivateMessageService>();
 
-
+builder.Services.AddHostedService<ChatListner>();
 
 //Message Queue Config
 builder.Services.AddSingleton<IConnectionProvider>(
@@ -66,7 +66,6 @@ builder.Services.AddSingleton<ISubscriber>(x => new Subscriber(x.GetService<ICon
     "stockbotmessage",
     ExchangeType.Topic));
 
-builder.Services.AddHostedService<ChatListner>();
 
 //Signal R
 builder.Services.AddSignalR();

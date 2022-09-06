@@ -11,19 +11,20 @@ namespace ChatApp.Services
     public class ChatListner : BackgroundService
     {
         private readonly ISubscriber _subscriber;
-        private readonly IRoomMessageService _roomMessageService;
+        private readonly IServiceProvider _serviceProvider;
         private readonly IHubContext<MessageHub> _messageHub;
 
-        public ChatListner(ISubscriber subscriber, IRoomMessageService roomMessageService,
+        public ChatListner(ISubscriber subscriber, 
+            IServiceProvider serviceProvider,
          IHubContext<MessageHub> messageHub)
         {
             _subscriber = subscriber;
-            _roomMessageService = roomMessageService;
+            _serviceProvider = serviceProvider;
             _messageHub = messageHub;
         }
 
 
-        private bool Subscribe(string dto, IDictionary<string, object> header)
+        private  bool Subscribe(string dto, IDictionary<string, object> header)
         {
             var data = JsonConvert.DeserializeObject<ResponseFromStockBotDto>(dto);
 
@@ -40,9 +41,15 @@ namespace ChatApp.Services
 
             if (data.IsSuccess)
             {
-                _roomMessageService.CreateRoomMessage(roomMessage.ChatRoomId, roomMessage);
+                using (IServiceScope scope = _serviceProvider.CreateScope())
+                {
+                    IRoomMessageService roomMessageService =
+                        scope.ServiceProvider.GetRequiredService<IRoomMessageService>();
 
-                _messageHub.Clients.Groups(data.ChatRoomName).SendAsync("ReceiveGroupMessage", new
+                     roomMessageService.CreateRoomMessage(roomMessage.ChatRoomId, roomMessage);
+                }               
+
+                 _messageHub.Clients.Groups(data.ChatRoomName).SendAsync("ReceiveGroupMessage", new
                 {
                     message = data.Message,
                     username = data.BotName,
@@ -63,7 +70,9 @@ namespace ChatApp.Services
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
         {
             _subscriber.Subscribe(Subscribe);
+
             return Task.CompletedTask;
+
         }
     }
 }
