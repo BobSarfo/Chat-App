@@ -4,9 +4,12 @@ using ChatApp.Dtos;
 using ChatApp.Extensions;
 using ChatApp.Hubs;
 using ChatApp.Interfaces;
+using ChatApp.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
+using Newtonsoft.Json;
 using Plain.RabbitMQ;
+using StockChatBot.Dto;
 
 namespace ChatApp.Controllers
 {
@@ -74,30 +77,49 @@ namespace ChatApp.Controllers
         [HttpPost]
         public async Task<JsonResult> CreateGroupMessage([FromBody] CreateRoomMessageDto createRoomMessage)
         {
-            
-            
             var userHubConnectionId = _connections.GetConnectionStringByUserName(User.GetUsername());
 
             var roomMessage = new RoomMessage
             {
                 Message = createRoomMessage.Message,
-                IsStockCode = true,
+                IsStockCode = false,
                 ChatRoomId = createRoomMessage.RoomId,
             };
 
-            _publisher.Publish(createRoomMessage.Message, "chatmessage.group",null);
+            
+
             if (userHubConnectionId is not null && _connections.TryGetValue(userHubConnectionId, out ConnectedUserDto connectedUser))
             {
                 roomMessage.SenderId = connectedUser.UserId;
                 roomMessage.SenderUsername = connectedUser.UserName;
 
-                await _roomMessageService.CreateRoomMessage(createRoomMessage.RoomId, roomMessage);
+
                 await _messageHub.Clients.Group(connectedUser.SelectedRoomName)
-                    .SendAsync("ReceiveGroupMessage", new {
-                        message =  roomMessage.Message,
+                    .SendAsync("ReceiveGroupMessage", new
+                    {
+                        message = roomMessage.Message,
                         username = roomMessage.SenderUsername,
                         timeStamp = roomMessage.Timestamp.ToString("g")
                     });
+
+                
+                if (ChatMessageService.IsBotMessage(createRoomMessage.Message))
+                {
+                    var stockCode = ChatMessageService.GetStockCodeFromMessage(createRoomMessage.Message);
+                    var request = new RequestToStockBotDto
+                    {
+                        ChatRoomName = connectedUser.SelectedRoomName,
+                        Message = stockCode,
+                        IsRoomMessage = true,
+                        ChatRoomId = createRoomMessage.RoomId
+                    };
+                    var serializedRequest = JsonConvert.SerializeObject(request);
+                    _publisher.Publish(serializedRequest, "chatmessage.group", null);
+                }
+                else
+                {
+                    await _roomMessageService.CreateRoomMessage(createRoomMessage.RoomId, roomMessage);
+                }
             }
 
             return Json(new { status = 1, message = "success" });

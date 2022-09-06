@@ -28,7 +28,7 @@ builder.Services.AddResponseCompression(options =>
         new[] { "application/octet-stream" });
 });
 
-builder.Services.AddSignalR();
+
 
 builder.Services.AddIdentity<User, IdentityRole<int>>(options =>
 {
@@ -51,6 +51,8 @@ builder.Services.AddScoped<IRoomMessageService, RoomMessageService>();
 builder.Services.AddScoped<IPrivateMessageService, PrivateMessageService>();
 
 
+
+//Message Queue Config
 builder.Services.AddSingleton<IConnectionProvider>(
     new ConnectionProvider(builder.Configuration.GetValue<string>("RabbitMqConfigUrl")));
 
@@ -66,6 +68,8 @@ builder.Services.AddSingleton<ISubscriber>(x => new Subscriber(x.GetService<ICon
 
 builder.Services.AddHostedService<ChatListner>();
 
+//Signal R
+builder.Services.AddSignalR();
 builder.Services.AddSingleton<IDictionary<string, ConnectedUserDto>>(options => new Dictionary<string, ConnectedUserDto>());
 
 builder.Services.AddRazorPages();

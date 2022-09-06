@@ -1,25 +1,57 @@
-﻿using Newtonsoft.Json;
+﻿using chat_application.Models;
+using ChatApp.Hubs;
+using ChatApp.Interfaces;
+using Microsoft.AspNetCore.SignalR;
+using Newtonsoft.Json;
 using Plain.RabbitMQ;
+using StockChatBot.Dto;
 
 namespace ChatApp.Services
 {
     public class ChatListner : BackgroundService
     {
-        private readonly ISubscriber subscriber;
-        private readonly ILogger<ChatListner> _logger;
+        private readonly ISubscriber _subscriber;
+        private readonly IRoomMessageService _roomMessageService;
+        private readonly IHubContext<MessageHub> _messageHub;
 
-        public ChatListner(ISubscriber subscriber,ILogger<ChatListner> logger)
+        public ChatListner(ISubscriber subscriber, IRoomMessageService roomMessageService,
+         IHubContext<MessageHub> messageHub)
         {
-            this.subscriber = subscriber; _logger = logger;
-            ;
+            _subscriber = subscriber;
+            _roomMessageService = roomMessageService;
+            _messageHub = messageHub;
         }
 
 
-        private bool Subscribe(string message, IDictionary<string, object> header)
+        private bool Subscribe(string dto, IDictionary<string, object> header)
         {
-            _logger.LogInformation(message);
+            var data = JsonConvert.DeserializeObject<ResponseFromStockBotDto>(dto);
 
 
+            var roomMessage = new RoomMessage
+            {
+                Message = data.Message,
+                IsStockCode = true,
+                ChatRoomId = data.ChatRoomId,
+                SenderUsername = data.BotName,
+                SenderId = -1, 
+                Timestamp = DateTime.UtcNow
+            };
+
+            if (data.IsSuccess)
+            {
+                _roomMessageService.CreateRoomMessage(roomMessage.ChatRoomId, roomMessage);
+
+                _messageHub.Clients.Groups(data.ChatRoomName).SendAsync("ReceiveGroupMessage", new
+                {
+                    message = data.Message,
+                    username = data.BotName,
+                    timeStamp = DateTime.UtcNow.ToString("g")
+                });
+
+            }
+
+            //handle errors and loggings
             return true;
         }
 
@@ -30,7 +62,7 @@ namespace ChatApp.Services
 
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            subscriber.Subscribe(Subscribe);
+            _subscriber.Subscribe(Subscribe);
             return Task.CompletedTask;
         }
     }
