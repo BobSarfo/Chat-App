@@ -162,7 +162,7 @@ namespace ChatApp.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    GroupName = table.Column<string>(type: "nvarchar(256)", nullable: false),
+                    RoomName = table.Column<string>(type: "nvarchar(256)", nullable: false),
                     DateCreated = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UserId = table.Column<int>(type: "int", nullable: true)
                 },
@@ -183,9 +183,9 @@ namespace ChatApp.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     SenderId = table.Column<int>(type: "int", nullable: false),
-                    SenderUserName = table.Column<string>(type: "varchar(256)", nullable: false),
+                    SenderUsername = table.Column<string>(type: "varchar(256)", nullable: false),
                     ReceiverId = table.Column<int>(type: "int", nullable: false),
-                    ReceiverUserName = table.Column<string>(type: "varchar(256)", nullable: false),
+                    ReceiverUsername = table.Column<string>(type: "varchar(256)", nullable: false),
                     Message = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     IsSeen = table.Column<bool>(type: "bit", nullable: false),
                     IsStockCode = table.Column<bool>(type: "bit", nullable: false),
@@ -208,10 +208,11 @@ namespace ChatApp.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    SenderId = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    IsStockCode = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    TimeSent = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    SenderUserName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    SenderId = table.Column<int>(type: "int", nullable: false),
+                    SenderUsername = table.Column<string>(type: "varchar(256)", nullable: false),
+                    IsStockCode = table.Column<bool>(type: "bit", nullable: false),
+                    Timestamp = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Message = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ChatRoomId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -227,8 +228,13 @@ namespace ChatApp.Migrations
 
             migrationBuilder.InsertData(
                 table: "ChatRooms",
-                columns: new[] { "Id", "DateCreated", "GroupName", "UserId" },
-                values: new object[] { 1, new DateTime(2022, 9, 4, 16, 5, 51, 116, DateTimeKind.Utc).AddTicks(8099), "General", null });
+                columns: new[] { "Id", "DateCreated", "RoomName", "UserId" },
+                values: new object[] { 1001, new DateTime(2022, 9, 6, 13, 55, 47, 599, DateTimeKind.Utc).AddTicks(8403), "General", null });
+
+            migrationBuilder.InsertData(
+                table: "ChatRooms",
+                columns: new[] { "Id", "DateCreated", "RoomName", "UserId" },
+                values: new object[] { 1002, new DateTime(2022, 9, 6, 13, 55, 47, 599, DateTimeKind.Utc).AddTicks(8408), "Coding", null });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",

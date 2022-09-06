@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ChatApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220904160551_init")]
+    [Migration("20220906135547_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -35,7 +35,7 @@ namespace ChatApp.Migrations
                     b.Property<DateTime>("DateCreated")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("GroupName")
+                    b.Property<string>("RoomName")
                         .IsRequired()
                         .HasColumnType("nvarchar(256)");
 
@@ -51,9 +51,15 @@ namespace ChatApp.Migrations
                     b.HasData(
                         new
                         {
-                            Id = 1,
-                            DateCreated = new DateTime(2022, 9, 4, 16, 5, 51, 116, DateTimeKind.Utc).AddTicks(8099),
-                            GroupName = "General"
+                            Id = 1001,
+                            DateCreated = new DateTime(2022, 9, 6, 13, 55, 47, 599, DateTimeKind.Utc).AddTicks(8403),
+                            RoomName = "General"
+                        },
+                        new
+                        {
+                            Id = 1002,
+                            DateCreated = new DateTime(2022, 9, 6, 13, 55, 47, 599, DateTimeKind.Utc).AddTicks(8408),
+                            RoomName = "Coding"
                         });
                 });
 
@@ -78,14 +84,14 @@ namespace ChatApp.Migrations
                     b.Property<int>("ReceiverId")
                         .HasColumnType("int");
 
-                    b.Property<string>("ReceiverUserName")
+                    b.Property<string>("ReceiverUsername")
                         .IsRequired()
                         .HasColumnType("varchar(256)");
 
                     b.Property<int>("SenderId")
                         .HasColumnType("int");
 
-                    b.Property<string>("SenderUserName")
+                    b.Property<string>("SenderUsername")
                         .IsRequired()
                         .HasColumnType("varchar(256)");
 
@@ -113,19 +119,21 @@ namespace ChatApp.Migrations
                     b.Property<int>("ChatRoomId")
                         .HasColumnType("int");
 
-                    b.Property<string>("IsStockCode")
+                    b.Property<bool>("IsStockCode")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Message")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("SenderId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("SenderId")
+                        .HasColumnType("int");
 
-                    b.Property<string>("SenderUserName")
+                    b.Property<string>("SenderUsername")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("varchar(256)");
 
-                    b.Property<DateTime>("TimeSent")
+                    b.Property<DateTime>("Timestamp")
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
@@ -353,7 +361,7 @@ namespace ChatApp.Migrations
             modelBuilder.Entity("chat_application.Models.RoomMessage", b =>
                 {
                     b.HasOne("chat_application.Models.ChatRoom", "ChatRoom")
-                        .WithMany()
+                        .WithMany("Messages")
                         .HasForeignKey("ChatRoomId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -410,6 +418,11 @@ namespace ChatApp.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("chat_application.Models.ChatRoom", b =>
+                {
+                    b.Navigation("Messages");
                 });
 
             modelBuilder.Entity("chat_application.Models.User", b =>

@@ -8,13 +8,13 @@ using StockChatBot.Dto;
 
 namespace ChatApp.Services
 {
-    public class ChatListner : BackgroundService
+    public class BotListner : BackgroundService
     {
         private readonly ISubscriber _subscriber;
         private readonly IServiceProvider _serviceProvider;
         private readonly IHubContext<MessageHub> _messageHub;
 
-        public ChatListner(ISubscriber subscriber, 
+        public BotListner(ISubscriber subscriber, 
             IServiceProvider serviceProvider,
          IHubContext<MessageHub> messageHub)
         {
@@ -46,12 +46,22 @@ namespace ChatApp.Services
                     IRoomMessageService roomMessageService =
                         scope.ServiceProvider.GetRequiredService<IRoomMessageService>();
 
-                     roomMessageService.CreateRoomMessage(roomMessage.ChatRoomId, roomMessage);
-                }               
+                    roomMessageService.CreateRoomMessage(roomMessage.ChatRoomId, roomMessage);
+                }
 
-                 _messageHub.Clients.Groups(data.ChatRoomName).SendAsync("ReceiveGroupMessage", new
+                _messageHub.Clients.Groups(data.ChatRoomName).SendAsync("ReceiveGroupMessage", new
                 {
                     message = data.Message,
+                    username = data.BotName,
+                    timeStamp = DateTime.UtcNow.ToString("g")
+                });
+
+            }
+            else {
+
+                _messageHub.Clients.Groups(data.ChatRoomName).SendAsync("ReceiveGroupMessage", new
+                {
+                    message = "Sorry try again. "+ data.ErrorMessage,
                     username = data.BotName,
                     timeStamp = DateTime.UtcNow.ToString("g")
                 });

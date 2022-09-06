@@ -1,6 +1,6 @@
 ﻿namespace ChatApp.Services
 {
-    public static class ChatMessageService
+    public static class MessageActionService
     {
         public static bool IsBotMessage(string message)
         {

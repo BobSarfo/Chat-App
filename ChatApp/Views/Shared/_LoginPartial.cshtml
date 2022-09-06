@@ -1,8 +1,8 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @using chat_application.Extensions
 @using chat_application.Models
-@inject SignInManager<User> SignInManager
-@inject UserManager<User> UserManager
+@inject SignInManager<AppUser> SignInManager
+@inject UserManager<AppUser> UserManager
 
 <ul class="navbar-nav">
 @if (SignInManager.IsSignedIn(User))

@@ -33,22 +33,28 @@ namespace ChatApp.Controllers
             _publisher = publisher;
             _connections = connections;
         }
-
-        public async Task<IActionResult> ChatRoom()
+        //id is the room Id
+        public async Task<IActionResult> ChatRoom(int id=-1)
         {
             List<ChatRoom> namesOfRooms = new();
             List<RoomMessage?> roomMessages = new();
             var data = new ChatRoomDto { RoomNames = namesOfRooms, RoomMessages = roomMessages };
+
             if (User.Identity is null)
             {
                 return View(data);
             }
             else
             {
-                var defaultSeededRoomId = 1;
-                var chatRooms = await _chatRoomService.GetAllChatRoomsAsync();
+                var defaultSeededRoomId = 1001;
+                if (id == -1) id = defaultSeededRoomId; 
 
-                var foundRoomMessages = await _roomMessageService.GetRoomMessagesByIdAsync(defaultSeededRoomId);
+                data.SelectedRoomId = id;
+                if(User.GetUsername() is not null);
+                    data.SelectedRoom = await _chatRoomService.UpdateOnlineUserChatRoom(id,User.GetUsername()) ?? data.SelectedRoom;
+                
+                var chatRooms = await _chatRoomService.GetAllChatRoomsAsync();
+                var foundRoomMessages = await _roomMessageService.GetRoomMessagesByIdAsync(id);
 
                 if (foundRoomMessages is not null)
                 {
@@ -68,9 +74,6 @@ namespace ChatApp.Controllers
 
         public async Task<IActionResult> PrivateChat()
         {
-
-
-
             return View();
         }
 
@@ -103,9 +106,9 @@ namespace ChatApp.Controllers
                     });
 
                 
-                if (ChatMessageService.IsBotMessage(createRoomMessage.Message))
+                if (MessageActionService.IsBotMessage(createRoomMessage.Message))
                 {
-                    var stockCode = ChatMessageService.GetStockCodeFromMessage(createRoomMessage.Message);
+                    var stockCode = MessageActionService.GetStockCodeFromMessage(createRoomMessage.Message);
                     var request = new RequestToStockBotDto
                     {
                         ChatRoomName = connectedUser.SelectedRoomName,

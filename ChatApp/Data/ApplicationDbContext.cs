@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ChatApp.Data
 {
-    public class ApplicationDbContext : IdentityDbContext<User, IdentityRole<int>, int>
+    public class ApplicationDbContext : IdentityDbContext<AppUser, IdentityRole<int>, int>
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
@@ -21,10 +21,16 @@ namespace ChatApp.Data
             builder.Entity<ChatRoom>().HasData(
                new ChatRoom
                {
-                   GroupName = "General",
+                   RoomName = "General",
                    DateCreated = DateTime.UtcNow,
-                   Id = 1
-               }
+                   Id = 1001
+               },
+                  new ChatRoom
+                  {
+                      RoomName = "Coding",
+                      DateCreated = DateTime.UtcNow,
+                      Id = 1002
+                  }
            );
             base.OnModelCreating(builder);
         }

@@ -10,7 +10,6 @@ using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
 using Plain.RabbitMQ;
 using RabbitMQ.Client;
-using System.Security.Policy;
 using Publisher = Plain.RabbitMQ.Publisher;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -30,7 +29,7 @@ builder.Services.AddResponseCompression(options =>
 
 
 
-builder.Services.AddIdentity<User, IdentityRole<int>>(options =>
+builder.Services.AddIdentity<AppUser, IdentityRole<int>>(options =>
 {
     options.SignIn.RequireConfirmedAccount = false;
     options.Password.RequireDigit = false;
@@ -50,7 +49,7 @@ builder.Services.AddScoped<IChatRoomService, ChatRoomService>();
 builder.Services.AddScoped<IRoomMessageService, RoomMessageService>();
 builder.Services.AddScoped<IPrivateMessageService, PrivateMessageService>();
 
-builder.Services.AddHostedService<ChatListner>();
+builder.Services.AddHostedService<BotListner>();
 
 //Message Queue Config
 builder.Services.AddSingleton<IConnectionProvider>(

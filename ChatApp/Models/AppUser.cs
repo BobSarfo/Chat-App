@@ -2,7 +2,7 @@
 
 namespace chat_application.Models
 {
-    public partial class User : IdentityUser<int>
+    public partial class AppUser : IdentityUser<int>
     {
         public ICollection<ChatRoom> ChatRooms { get; set; }
 

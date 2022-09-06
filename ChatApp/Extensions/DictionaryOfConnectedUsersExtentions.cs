@@ -8,7 +8,7 @@ namespace ChatApp.Extensions
         {
             foreach (var connection in connections)
             {
-                if (connection.Value.UserName.ToLower() == username.ToLower())
+                if (username is not null && connection.Value.UserName.ToLower() == username.ToLower())
                 {
                     return connection.Key;
                 }
