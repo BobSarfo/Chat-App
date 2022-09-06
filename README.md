@@ -1,10 +1,10 @@
 # Chat Project [![Run Unit](https://github.com/alvinmarshall/ChatChallenge/actions/workflows/pull-request-build.yaml/badge.svg)](https://github.com/alvinmarshall/ChatChallenge/actions/workflows/pull-request-build.yaml)
 
 ## Table of contents  
-1. [Assignment](##Assignment)  
-2. [Some paragraph](#paragraph1)  
-1. [Sub paragraph](#subparagraph1)  
-3. [Another paragraph](#paragraph2)  
+1. [Mandatory Features](#assignment)  
+2. [Bonus (Optional) Features](#bonus-optional)  
+3. [Sub paragraph](#)
+4. [Another paragraph](#paragraph2)  
 
 
 ## Assignment
@@ -34,9 +34,6 @@ Bonus (Optional)
 
 
 
-## Screenshots  
-
-![App Screenshot](https://lanecdr.org/wp-content/uploads/2019/08/placeholder.png)
 
 ## Tech Stack  
 
@@ -98,6 +95,6 @@ To run this project, you will need to add the following environment variables to
 
 If you have any feedback, please reach out to us at fake@fake.com
 
-## License  
 
-[MIT](https://choosealicense.com/licenses/mit/)
+## Screenshots
+<img src="imgs/ui.jpg"/>
