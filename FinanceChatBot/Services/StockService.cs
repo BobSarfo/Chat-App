@@ -51,7 +51,7 @@ namespace StockChatBot.Services
             }
             catch (Exception ex)
             {
-                result.ErrorMessage = "Bot Server Error Occur Get Stock Data";
+                result.ErrorMessage = "Bot Server Error Occurred Getting Stock Data";
                 result.IsSuccess = false;
                 _logger.LogError(ex,ex.InnerException is null ? "Error Occured Reading Fetching Data" : ex.InnerException.Message);
                 return result;
@@ -61,7 +61,9 @@ namespace StockChatBot.Services
             {
                 result.ErrorMessage = "No Information Found";
                 result.IsSuccess = false;
+                _logger.LogError(result.ErrorMessage);
                 return result;
+
             }
 
             var stock = stocks.FirstOrDefault();
@@ -70,17 +72,19 @@ namespace StockChatBot.Services
             {
                 result.ErrorMessage = "No Information Found";
                 result.IsSuccess = false;
+                _logger.LogError(result.ErrorMessage);
                 return result;
             }
 
             if (stock.Close.Equals("N/D", StringComparison.CurrentCultureIgnoreCase))
             {
-                result.ErrorMessage = "No Stocks Information Found";
+                result.ErrorMessage = "No Stocks Information Found: Invalid Stock Code";
                 result.IsSuccess = false;
+                _logger.LogError(result.ErrorMessage);
                 return result;
             }
            
-            var botMessage = $"{stock.Symbol} quote is {stock.Open} per share";
+            var botMessage = $"{stock.Symbol} quote is ${stock.Open} per share";
 
             result.Message = botMessage;
             result.IsSuccess = true;

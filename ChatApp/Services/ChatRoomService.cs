@@ -62,19 +62,15 @@ namespace ChatApp.Services
             if (foundRoom is not null && _connections.Count > 0)
             {
                 var userHubConnectionId = _connections.GetConnectionStringByUserName(userName);
-                if(userHubConnectionId is not null)
+                if (userHubConnectionId is not null && _connections.TryGetValue(userHubConnectionId, out var connectedUser))
                 {
-                    if (_connections.TryGetValue(userHubConnectionId, out var connectedUser))
-                    {
-                        connectedUser.SelectedRoomName = foundRoom.RoomName;
-                        _connections[userHubConnectionId] = connectedUser;
-                    }
+                    connectedUser.SelectedRoomName = foundRoom.RoomName;
+                    _connections[userHubConnectionId] = connectedUser;
                 }
 
             }
 
             return foundRoom?.RoomName;
         }
-
     }
 }

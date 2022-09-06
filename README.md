@@ -96,5 +96,4 @@ To run this project, you will need to add the following environment variables to
 If you have any feedback, please reach out to us at fake@fake.com
 
 
-## Screenshots
-<img src="imgs/ui.jpg"/>
+[MIT](https://choosealicense.com/licenses/mit/)
