@@ -1,7 +1,7 @@
 ﻿namespace ChatApp.Domain.Services
 {
-    internal interface IOnlineUserService
+    public interface IOnlineUserService
     {        
-        public Task<string?> UpdateChatRoom(int chatRoomId, string userName);
+        public Task<string?> UpdateUserChatRoom(int chatRoomId, string userName);
     }
 }

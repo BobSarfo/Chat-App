@@ -18,6 +18,12 @@ public class ChatRoomRepository : BaseRepository<ChatRoomEntity>, IChatRoomRepos
         
         return roomEntity is null? null:roomEntity.ToChatRoom();
     }
+    public async Task<ChatRoom?> GetByRoomIdAsync(int roomId)
+    {
+        var roomEntity = await Task.FromResult(Find(entity => entity.Id == roomId).FirstOrDefault());
+        return roomEntity is null ? null : roomEntity.ToChatRoom();
+
+    }
 
     public async Task<ChatRoom> Add(ChatRoom input)
     {

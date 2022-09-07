@@ -1,4 +1,4 @@
-﻿using ChatApp.Models;
+﻿using ChatApp.Dtos;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 

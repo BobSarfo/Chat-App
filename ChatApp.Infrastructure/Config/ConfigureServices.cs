@@ -12,7 +12,7 @@ namespace ChatApp.Infrastructure.Config
         public static IServiceCollection AddInfrastructureServices(this IServiceCollection services)
         {
             services.AddScoped<IChatRoomRepository, ChatRoomRepository>();
-            services.AddScoped<IRoomMessageRepository, MessageRepository>();
+            services.AddScoped<IRoomMessageRepository, RoomMessageRepository>();
             services.AddTransient<IEmailSender, FakeEmailSender>();
 
             return services;

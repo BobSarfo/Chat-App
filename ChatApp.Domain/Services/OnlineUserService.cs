@@ -14,7 +14,7 @@ namespace ChatApp.Domain.Services
             _connections = connections;
             _chatRoomRepository = chatRoomRepository;
         }
-        public async Task<string?> UpdateChatRoom(int chatRoomId, string userName)
+        public async Task<string?> UpdateUserChatRoom(int chatRoomId, string userName)
         {
             var chatRooms = await _chatRoomRepository.GetRooms();
 

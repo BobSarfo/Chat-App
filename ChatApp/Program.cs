@@ -62,7 +62,7 @@ builder.Services.AddSingleton<ISubscriber>(x => new Subscriber(x.GetService<ICon
 
 //Signal R
 builder.Services.AddSignalR();
-builder.Services.AddSingleton<IDictionary<string, ConnectedUserDto>>(options => new Dictionary<string, ConnectedUserDto>());
+builder.Services.AddSingleton((Func<IServiceProvider, IDictionary<string,ConnectedUser>>)(options => new Dictionary<string, ConnectedUser>()));
 
 builder.Services.AddRazorPages();
 

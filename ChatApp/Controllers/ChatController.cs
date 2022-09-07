@@ -1,7 +1,8 @@
-﻿using chat_application.Extensions;
+﻿using ChatApp.Domain.Extensions;
 using ChatApp.Domain.Models;
+using ChatApp.Domain.Repositories;
+using ChatApp.Domain.Services;
 using ChatApp.Dtos;
-using ChatApp.Extensions;
 using ChatApp.Hubs;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
@@ -13,20 +14,23 @@ namespace ChatApp.Controllers
 {
     public class ChatController : Controller
     {
-        private readonly IChatRoomService _chatRoomService;
+        private readonly IOnlineUserService _onlineUserService;
         private readonly IRoomMessageService _roomMessageService;
+        private readonly IChatRoomRepository _chatRoomRepository;
         private readonly IHubContext<MessageHub> _messageHub;
         private readonly IPublisher _publisher;
-        private readonly IDictionary<string, ConnectedUserDto> _connections;
+        private readonly IDictionary<string, ConnectedUser> _connections;
 
-        public ChatController(IChatRoomService chatRoomService,
+        public ChatController(IOnlineUserService onlineUserService,
             IRoomMessageService roomMessageService,
+            IChatRoomRepository chatRoomRepository,
             IHubContext<MessageHub> messageHub,
             IPublisher publisher,
-            IDictionary<string, ConnectedUserDto> connections)
+            IDictionary<string, ConnectedUser> connections)
         {
-            _chatRoomService = chatRoomService;
+            _onlineUserService = onlineUserService;
             _roomMessageService = roomMessageService;
+            _chatRoomRepository = chatRoomRepository;
             _messageHub = messageHub;
             _publisher = publisher;
             _connections = connections;
@@ -49,9 +53,9 @@ namespace ChatApp.Controllers
 
                 data.SelectedRoomId = id;
                 if(User.GetUsername() is not null);
-                    data.SelectedRoom = await _chatRoomService.UpdateOnlineUserChatRoom(id,User.GetUsername()) ?? data.SelectedRoom;
+                    data.SelectedRoom = await _onlineUserService.UpdateUserChatRoom(id,User.GetUsername()) ?? data.SelectedRoom;
                 
-                var chatRooms = await _chatRoomService.GetAllChatRoomsAsync();
+                var chatRooms = await _chatRoomRepository.GetRooms();
                 var foundRoomMessages = await _roomMessageService.GetRoomMessagesByIdAsync(id);
 
                 if (foundRoomMessages is not null)
@@ -78,6 +82,7 @@ namespace ChatApp.Controllers
         [HttpPost]
         public async Task<JsonResult> CreateGroupMessage([FromBody] CreateRoomMessageDto createRoomMessage)
         {
+
             var userHubConnectionId = _connections.GetConnectionStringByUserName(User.GetUsername());
 
             var roomMessage = new RoomMessage
@@ -89,7 +94,7 @@ namespace ChatApp.Controllers
 
             
 
-            if (userHubConnectionId is not null && _connections.TryGetValue(userHubConnectionId, out ConnectedUserDto connectedUser))
+            if (userHubConnectionId is not null && _connections.TryGetValue(userHubConnectionId, out ConnectedUser connectedUser))
             {
                 roomMessage.SenderId = connectedUser.UserId;
                 roomMessage.SenderUsername = connectedUser.UserName;

@@ -1,4 +1,5 @@
 ﻿using ChatApp.Domain.Extensions;
+using ChatApp.Domain.Models;
 using ChatApp.Dtos;
 using Microsoft.AspNetCore.SignalR;
 
@@ -6,15 +7,15 @@ namespace ChatApp.Hubs
 {
     public class MessageHub : Hub
     {
-        private readonly IDictionary<string, ConnectedUserDto> _connections;
+        private readonly IDictionary<string, ConnectedUser> _connections;
 
-        public MessageHub(IDictionary<string, ConnectedUserDto> connections)
+        public MessageHub(IDictionary<string, ConnectedUser> connections)
         {
             _connections = connections;
         }
         public override Task OnConnectedAsync()
         {
-            var connectedUser = new ConnectedUserDto
+            var connectedUser = new ConnectedUser
             {
                 ConnectionId = Context.ConnectionId,
                 UserName = Context.User.GetUsername(),
@@ -39,13 +40,13 @@ namespace ChatApp.Hubs
         }
 
 
-        public List<ConnectedUserDto> GetAllConnectedUsers() => _connections.Values.ToList();
+        public List<ConnectedUser> GetAllConnectedUsers() => _connections.Values.ToList();
 
 
         //sample caller codes
         public async Task SendMessageToRoom(string message)
         {
-            if (_connections.TryGetValue(Context.ConnectionId, out ConnectedUserDto connectedUser))
+            if (_connections.TryGetValue(Context.ConnectionId, out ConnectedUser connectedUser))
             {
                 await Clients.Group(connectedUser.SelectedRoomName).SendAsync("ReceiveGroupMessage", message, connectedUser);
 
@@ -60,7 +61,7 @@ namespace ChatApp.Hubs
             }
         }
 
-        public void AddToRoom(ConnectedUserDto connectedUser)
+        public void AddToRoom(ConnectedUser connectedUser)
         {
             //room , username
              Groups.AddToGroupAsync(Context.ConnectionId, connectedUser.SelectedRoomName);
