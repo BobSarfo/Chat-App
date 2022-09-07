@@ -1,11 +1,10 @@
-using chat_application.Models;
-using ChatApp.Data;
+using ChatApp.Domain.Config;
+using ChatApp.Domain.Models;
 using ChatApp.Dtos;
 using ChatApp.Hubs;
-using ChatApp.Interfaces;
-using ChatApp.Services;
+using ChatApp.Infrastructure.Config;
+using ChatApp.Infrastructure.Contexts;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
 using Plain.RabbitMQ;
@@ -16,7 +15,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
+builder.Services.AddDbContext<ChatAppDbContext>(options =>
     options.UseSqlServer(connectionString));
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
@@ -38,17 +37,13 @@ builder.Services.AddIdentity<AppUser, IdentityRole<int>>(options =>
     options.Password.RequireUppercase = false;
     options.Password.RequiredLength = 5;
 })
-    .AddEntityFrameworkStores<ApplicationDbContext>()
+    .AddEntityFrameworkStores<ChatAppDbContext>()
     .AddDefaultTokenProviders();
 
 
+builder.Services.AddInfrastructureServices();
+builder.Services.AddDomainServices();
 
-builder.Services.AddTransient<IEmailSender, FakeEmailSender>();
-
-builder.Services.AddScoped<IChatRoomService, ChatRoomService>();
-builder.Services.AddScoped<IRoomMessageService, RoomMessageService>();
-
-builder.Services.AddHostedService<BotListner>();
 
 //Message Queue Config
 builder.Services.AddSingleton<IConnectionProvider>(

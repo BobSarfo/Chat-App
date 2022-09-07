@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity.UI.Services;
 
-namespace ChatApp.Services
+namespace ChatApp.Infrastructure.Services
 {
     public class FakeEmailSender : IEmailSender
     {

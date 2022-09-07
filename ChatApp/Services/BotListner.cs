@@ -1,6 +1,6 @@
-﻿using chat_application.Models;
+﻿using ChatApp.Domain.Models;
+using ChatApp.Domain.Services;
 using ChatApp.Hubs;
-using ChatApp.Interfaces;
 using Microsoft.AspNetCore.SignalR;
 using Newtonsoft.Json;
 using Plain.RabbitMQ;

@@ -1,22 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
+﻿using ChatApp.Domain.Extensions;
+using ChatApp.Domain.Models;
+using ChatApp.Domain.Repositories;
 
 namespace ChatApp.Domain.Services
 {
-    public class OnlineUserService
+    public class OnlineUserService : IOnlineUserService
     {
-        public OnlineUserService()
-        {
+        private readonly IDictionary<string, ConnectedUser> _connections;
+        private readonly IChatRoomRepository _chatRoomRepository;
 
+        public OnlineUserService(IDictionary<string, ConnectedUser> connections, IChatRoomRepository chatRoomRepository)
+        {
+            _connections = connections;
+            _chatRoomRepository = chatRoomRepository;
         }
         public async Task<string?> UpdateChatRoom(int chatRoomId, string userName)
         {
-            //call repository
-            var chatRooms = await GetAllChatRoomsAsync();
+            var chatRooms = await _chatRoomRepository.GetRooms();
 
             var foundRoom = chatRooms?.FirstOrDefault(x => x.Id == chatRoomId);
             if (foundRoom is not null && _connections.Count > 0)

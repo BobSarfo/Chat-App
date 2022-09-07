@@ -1,6 +1,6 @@
 ﻿using System.Security.Claims;
 
-namespace chat_application.Extensions
+namespace ChatApp.Domain.Extensions
 {
     public static class ClaimsPrincipalExtensions
     {
@@ -11,7 +11,7 @@ namespace chat_application.Extensions
 
         public static int GetUserId(this ClaimsPrincipal user)
         {
-            int.TryParse(user.FindFirst(ClaimTypes.NameIdentifier)?.Value,out int userId);
+            int.TryParse(user.FindFirst(ClaimTypes.NameIdentifier)?.Value, out int userId);
             return userId;
         }
     }

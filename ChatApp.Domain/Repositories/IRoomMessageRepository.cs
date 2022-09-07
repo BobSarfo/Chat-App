@@ -1,6 +1,4 @@
-﻿using ChatApp.Domain.Entities;
-
-namespace ChatApp.Interfaces
+﻿namespace ChatApp.Interfaces
 {
     public interface IRoomMessageRepository
     {

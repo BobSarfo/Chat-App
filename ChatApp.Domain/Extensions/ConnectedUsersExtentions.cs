@@ -1,10 +1,10 @@
-﻿using ChatApp.Dtos;
-using System;
-namespace ChatApp.Extensions
+﻿using ChatApp.Domain.Models;
+
+namespace ChatApp.Domain.Extensions
 {
     public static class ConnectedUsersExtentions
     {
-        public static string? GetConnectionStringByUserName(this IDictionary<string, ConnectedUserDto> connections, string username)
+        public static string? GetConnectionStringByUserName(this IDictionary<string, ConnectedUser> connections, string username)
         {
             foreach (var connection in connections)
             {

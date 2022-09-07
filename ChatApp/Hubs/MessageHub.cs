@@ -1,7 +1,6 @@
-﻿using chat_application.Extensions;
+﻿using ChatApp.Domain.Extensions;
 using ChatApp.Dtos;
 using Microsoft.AspNetCore.SignalR;
-using System;
 
 namespace ChatApp.Hubs
 {

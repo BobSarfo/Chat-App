@@ -1,4 +1,4 @@
-using ChatApp.Domain.Entities;
+using ChatApp.Domain.Models;
 using ChatApp.Domain.Repositories;
 using ChatApp.Infrastructure.Contexts;
 using ChatApp.Infrastructure.Entities;

@@ -1,12 +1,9 @@
 ﻿using ChatApp.Domain.Repositories;
 using ChatApp.Infrastructure.Repositories;
+using ChatApp.Infrastructure.Services;
 using ChatApp.Interfaces;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ChatApp.Infrastructure.Config
 {
@@ -16,7 +13,7 @@ namespace ChatApp.Infrastructure.Config
         {
             services.AddScoped<IChatRoomRepository, ChatRoomRepository>();
             services.AddScoped<IRoomMessageRepository, MessageRepository>();
-
+            services.AddTransient<IEmailSender, FakeEmailSender>();
 
             return services;
         }

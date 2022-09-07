@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 
-namespace ChatApp.Domain.Entities
+namespace ChatApp.Domain.Models
 {
     public class ChatRoom
     {
@@ -10,6 +10,6 @@ namespace ChatApp.Domain.Entities
         public string RoomName { get; set; }
         public DateTime DateCreated { get; set; }
         public List<RoomMessage>? Messages { get; set; } = new List<RoomMessage>();
-   
+
     }
 }

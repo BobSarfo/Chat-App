@@ -1,17 +1,11 @@
-﻿using chat_application.Models;
-using ChatApp.Data;
-using ChatApp.Interfaces;
-using Microsoft.EntityFrameworkCore;
+﻿using ChatApp.Domain.Models;
 
-namespace ChatApp.Services
+namespace ChatApp.Domain.Services
 {
     public class RoomMessageService : IRoomMessageService
     {
-        private readonly ApplicationDbContext _db;
-        public RoomMessageService(ApplicationDbContext db)
-        {
-            _db = db;
-        }
+
+
 
         public async Task CreateRoomMessage(int roomId, RoomMessage roomMessage)
         {
@@ -26,13 +20,14 @@ namespace ChatApp.Services
         }
 
 
-
-        public async Task<List<RoomMessage?>?> GetRoomMessagesByIdAsync(int roomId, int load = 50)
+        public async Task<List<RoomMessage?>?> GetRoomMessagesByRoomIdAsync(int roomId, int load = 50)
         {
             var foundMessages = await _db.ChatRooms
                .SelectMany(x => x.Messages.DefaultIfEmpty()).Where(x => x.ChatRoomId == roomId).Take(load).OrderByDescending(x => x.Timestamp).ToListAsync();
 
             return foundMessages;
         }
+              public Task CreateRoomMessage(int roomId, RoomMessage roomMessage);
+
     }
 }
