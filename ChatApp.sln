@@ -7,7 +7,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChatApp", "ChatApp\ChatApp.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StockChatBot", "FinanceChatBot\StockChatBot.csproj", "{0FB91890-94F2-4C27-8C4B-CCCDE3E3105D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StockChatBotTests", "StockChatBotTests\StockChatBotTests.csproj", "{EA5FAE45-BFA0-4F24-9735-BA0A13C3696A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StockChatBotTests", "StockChatBotTests\StockChatBotTests.csproj", "{EA5FAE45-BFA0-4F24-9735-BA0A13C3696A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChatApp.Infrastructure", "ChatApp.Infrastructure\ChatApp.Infrastructure.csproj", "{0D49E9C2-7445-48E8-8945-EA0E3C032E68}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChatApp.Application", "ChatApp.Application\ChatApp.Application.csproj", "{25E9FC61-25F4-44F0-93C5-49AF76B4209E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChatApp.Domain", "ChatApp.Domain\ChatApp.Domain.csproj", "{765D6D9F-4860-446A-895C-2C88D3C3FED2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +33,18 @@ Global
 		{EA5FAE45-BFA0-4F24-9735-BA0A13C3696A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EA5FAE45-BFA0-4F24-9735-BA0A13C3696A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EA5FAE45-BFA0-4F24-9735-BA0A13C3696A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0D49E9C2-7445-48E8-8945-EA0E3C032E68}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0D49E9C2-7445-48E8-8945-EA0E3C032E68}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0D49E9C2-7445-48E8-8945-EA0E3C032E68}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0D49E9C2-7445-48E8-8945-EA0E3C032E68}.Release|Any CPU.Build.0 = Release|Any CPU
+		{25E9FC61-25F4-44F0-93C5-49AF76B4209E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{25E9FC61-25F4-44F0-93C5-49AF76B4209E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{25E9FC61-25F4-44F0-93C5-49AF76B4209E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{25E9FC61-25F4-44F0-93C5-49AF76B4209E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{765D6D9F-4860-446A-895C-2C88D3C3FED2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{765D6D9F-4860-446A-895C-2C88D3C3FED2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{765D6D9F-4860-446A-895C-2C88D3C3FED2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{765D6D9F-4860-446A-895C-2C88D3C3FED2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

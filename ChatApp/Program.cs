@@ -47,7 +47,6 @@ builder.Services.AddTransient<IEmailSender, FakeEmailSender>();
 
 builder.Services.AddScoped<IChatRoomService, ChatRoomService>();
 builder.Services.AddScoped<IRoomMessageService, RoomMessageService>();
-builder.Services.AddScoped<IPrivateMessageService, PrivateMessageService>();
 
 builder.Services.AddHostedService<BotListner>();
 

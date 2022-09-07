@@ -1,31 +1,32 @@
-﻿using chat_application.Models;
+﻿using ChatApp.Domain.Entities;
+using ChatApp.Infrastructure.Contexts;
+using ChatApp.Infrastructure.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace ChatApp.Data
+namespace ChatApp.Data.Contexts
 {
-    public class ApplicationDbContext : IdentityDbContext<AppUser, IdentityRole<int>, int>
+    public class ChatAppDbContext : IdentityDbContext<AppUserEntity, IdentityRole<int>, int>, IChatAppContext
     {
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+        public ChatAppDbContext(DbContextOptions<ChatAppDbContext> options)
             : base(options)
         {
         }
 
-        public DbSet<PrivateMessage> PrivateMessage { get; set; }
-        public DbSet<RoomMessage> RoomMessages { get; set; }
-        public DbSet<ChatRoom> ChatRooms { get; set; }
+        public DbSet<RoomMessageEntity> RoomMessages { get; set; }
+        public DbSet<ChatRoomEntity> ChatRooms { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            builder.Entity<ChatRoom>().HasData(
-               new ChatRoom
+            builder.Entity<ChatRoomEntity>().HasData(
+               new ChatRoomEntity
                {
                    RoomName = "General",
                    DateCreated = DateTime.UtcNow,
                    Id = 1001
                },
-                  new ChatRoom
+                  new ChatRoomEntity
                   {
                       RoomName = "Coding",
                       DateCreated = DateTime.UtcNow,
