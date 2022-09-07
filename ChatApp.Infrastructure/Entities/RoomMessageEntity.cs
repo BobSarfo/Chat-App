@@ -18,11 +18,6 @@ namespace ChatApp.Infrastructure.Entities
         [DataType(DataType.Text)]
         public string Message { get; set; }
 
-        internal RoomMessage ToRoomMessage()
-        {
-            throw new NotImplementedException();
-        }
-
         public int ChatRoomId { get; set; }
         public ChatRoomEntity ChatRoom { get; set; }
     }

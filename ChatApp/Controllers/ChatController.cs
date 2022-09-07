@@ -16,21 +16,21 @@ namespace ChatApp.Controllers
     {
         private readonly IOnlineUserService _onlineUserService;
         private readonly IRoomMessageService _roomMessageService;
-        private readonly IChatRoomRepository _chatRoomRepository;
+        private readonly IChatRoomService _chatRoomService;
         private readonly IHubContext<MessageHub> _messageHub;
         private readonly IPublisher _publisher;
         private readonly IDictionary<string, ConnectedUser> _connections;
 
         public ChatController(IOnlineUserService onlineUserService,
             IRoomMessageService roomMessageService,
-            IChatRoomRepository chatRoomRepository,
+            IChatRoomService chatRoomService,
             IHubContext<MessageHub> messageHub,
             IPublisher publisher,
             IDictionary<string, ConnectedUser> connections)
         {
             _onlineUserService = onlineUserService;
             _roomMessageService = roomMessageService;
-            _chatRoomRepository = chatRoomRepository;
+            _chatRoomService = chatRoomService;
             _messageHub = messageHub;
             _publisher = publisher;
             _connections = connections;
@@ -55,7 +55,8 @@ namespace ChatApp.Controllers
                 if(User.GetUsername() is not null);
                     data.SelectedRoom = await _onlineUserService.UpdateUserChatRoom(id,User.GetUsername()) ?? data.SelectedRoom;
                 
-                var chatRooms = await _chatRoomRepository.GetRooms();
+                var chatRooms = await _chatRoomService.GetAllRooms();
+
                 var foundRoomMessages = await _roomMessageService.GetRoomMessagesByIdAsync(id);
 
                 if (foundRoomMessages is not null)

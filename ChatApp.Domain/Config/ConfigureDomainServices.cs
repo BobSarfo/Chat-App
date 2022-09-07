@@ -9,6 +9,7 @@ namespace ChatApp.Domain.Config
         {
             services.AddScoped<IRoomMessageService, RoomMessageService>();
             services.AddScoped<IOnlineUserService, OnlineUserService>();
+            services.AddScoped<IChatRoomService, ChatRoomService>();
 
             return services;
         }

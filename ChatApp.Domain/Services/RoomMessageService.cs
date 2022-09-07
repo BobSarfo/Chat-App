@@ -29,22 +29,17 @@ namespace ChatApp.Domain.Services
             }
         }
 
-        public Task<List<RoomMessage>?> GetRoomMessagesByIdAsync(int roomId, int load = 50)
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task<List<RoomMessage>?> GetRoomMessagesByRoomIdAsync(int roomId, int load = 50)
+        public async Task<List<RoomMessage?>?> GetRoomMessagesByIdAsync(int roomId, int load = 50)
         {
             ChatRoom? foundroom = await _chatRoomRepository.GetByRoomIdAsync(roomId);
-             
+
             if (foundroom is not null)
             {
                 List<RoomMessage>? foundMessages = await _roomMessageRespository.GetOrderedMessageWithLimitAsync(foundroom);
                 return foundMessages;
-            }            
+            }
             return null;
-        }
+        }     
             
     }
 }

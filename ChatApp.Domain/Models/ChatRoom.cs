@@ -11,9 +11,5 @@ namespace ChatApp.Domain.Models
         public DateTime DateCreated { get; set; }
         public List<RoomMessage>? Messages { get; set; } = new List<RoomMessage>();
 
-        public static implicit operator ChatRoom?(List<RoomMessage>? v)
-        {
-            throw new NotImplementedException();
-        }
     }
 }
