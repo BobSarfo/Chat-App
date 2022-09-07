@@ -1,4 +1,4 @@
-﻿using chat_application.Models;
+﻿using ChatApp.Domain.Models;
 
 namespace ChatApp.Dtos
 {

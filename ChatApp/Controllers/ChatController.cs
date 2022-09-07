@@ -1,10 +1,8 @@
 ﻿using chat_application.Extensions;
-using chat_application.Models;
+using ChatApp.Domain.Models;
 using ChatApp.Dtos;
 using ChatApp.Extensions;
 using ChatApp.Hubs;
-using ChatApp.Interfaces;
-using ChatApp.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Newtonsoft.Json;

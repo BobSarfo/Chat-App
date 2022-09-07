@@ -27,7 +27,7 @@ builder.Services.AddResponseCompression(options =>
 });
 
 
-
+//Asp Identity
 builder.Services.AddIdentity<AppUser, IdentityRole<int>>(options =>
 {
     options.SignIn.RequireConfirmedAccount = false;
