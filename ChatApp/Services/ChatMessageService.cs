@@ -4,7 +4,7 @@
     {
         public static bool IsBotMessage(string message)
         {
-            var stockFormat = "/stock=";
+            var stockFormat = "/";
             return message.StartsWith(stockFormat);
         }
 

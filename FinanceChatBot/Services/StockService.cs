@@ -43,6 +43,14 @@ namespace StockChatBot.Services
                 return result;
             }
 
+            if(!request.Message.StartsWith("/stock="))
+            {
+                result.ErrorMessage = "Error in code sent, command start with: /stock= .Try again";
+                result.IsSuccess = false;
+
+                return result;
+            }
+
             List<Stock>? stocks = new();
 
             try
