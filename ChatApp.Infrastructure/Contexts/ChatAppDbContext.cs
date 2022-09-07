@@ -2,12 +2,10 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using System.Text;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace ChatApp.Infrastructure.Contexts
 {
-    public class ChatAppDbContext : IdentityDbContext<AppUserEntity, IdentityRole<int>, int>, IChatAppContext
+    public partial class ChatAppDbContext : IdentityDbContext <AppUser, IdentityRole<int>, int>, IChatAppContext
     {
         public ChatAppDbContext(DbContextOptions<ChatAppDbContext> options) : base(options)
         {

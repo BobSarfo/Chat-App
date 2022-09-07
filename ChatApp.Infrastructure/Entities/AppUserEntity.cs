@@ -2,7 +2,7 @@
 
 namespace ChatApp.Infrastructure.Entities
 {
-    public partial class AppUserEntity : IdentityUser<int>
+    public partial class AppUser : IdentityUser<int>
     {
         public List<ChatRoomEntity> ChatRooms { get; set; }
     }

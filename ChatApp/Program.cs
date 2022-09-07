@@ -4,6 +4,7 @@ using ChatApp.Dtos;
 using ChatApp.Hubs;
 using ChatApp.Infrastructure.Config;
 using ChatApp.Infrastructure.Contexts;
+using ChatApp.Infrastructure.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
@@ -14,9 +15,12 @@ using Publisher = Plain.RabbitMQ.Publisher;
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+
+
 builder.Services.AddDbContext<ChatAppDbContext>(options =>
     options.UseSqlServer(connectionString, b => b.MigrationsAssembly("ChatApp"))
     );
+
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
@@ -25,7 +29,6 @@ builder.Services.AddResponseCompression(options =>
     options.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(
         new[] { "application/octet-stream" });
 });
-
 
 //Asp Identity
 builder.Services.AddIdentity<AppUser, IdentityRole<int>>(options =>
