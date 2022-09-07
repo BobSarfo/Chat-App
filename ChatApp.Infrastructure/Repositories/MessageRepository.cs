@@ -1,20 +1,23 @@
-using Domain.Model;
-using Domain.Repository;
-using Infra.Context;
-using Infra.Entities;
-using Infra.Extensions;
+using ChatApp.Domain.Entities;
+using ChatApp.Infrastructure.Contexts;
+using ChatApp.Infrastructure.Entities;
+using ChatApp.Infrastructure.Extensions;
+using ChatApp.Interfaces;
+using System;
 
 namespace ChatApp.Infrastructure.Repositories;
 
-public class MessageRepository : BaseRepository<MessageEntity>, IChatMessageRepository
+public class MessageRepository : BaseRepository<RoomMessageEntity>, IRoomMessageRepository
 {
-    public MessageRepository(ChatAppContext context) : base(context)
+    public MessageRepository(ChatAppDbContext context) : base(context)
     {
     }
 
-    public async Task<ChatMessage> SaveMessageAsync(ChatMessage chatMessage)
+    public async Task<RoomMessage> SaveMessageAsync(RoomMessage chatMessage)
     {
-        var entity = await SaveAsync(chatMessage.FromChatMessage());
-        return entity.ToChatMessage();
+        var entity = await SaveAsync(chatMessage.ToRoomMessageEntity());
+        return entity.ToRoomMessage();
     }
+
+    
 }

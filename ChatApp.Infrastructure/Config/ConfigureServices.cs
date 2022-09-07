@@ -1,4 +1,5 @@
 ﻿using ChatApp.Domain.Repositories;
+using ChatApp.Infrastructure.Repositories;
 using ChatApp.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -14,7 +15,7 @@ namespace ChatApp.Infrastructure.Config
         public static IServiceCollection AddInfrastructureServices(this IServiceCollection services)
         {
             services.AddScoped<IChatRoomRepository, ChatRoomRepository>();
-            services.AddScoped<IRoomMessageReposity, MessageRepository>();
+            services.AddScoped<IRoomMessageRepository, MessageRepository>();
 
 
             return services;

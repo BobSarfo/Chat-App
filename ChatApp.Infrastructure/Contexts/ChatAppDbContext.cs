@@ -1,11 +1,10 @@
-﻿using ChatApp.Domain.Entities;
-using ChatApp.Infrastructure.Contexts;
-using ChatApp.Infrastructure.Entities;
+﻿using ChatApp.Infrastructure.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using System.Text;
 
-namespace ChatApp.Data.Contexts
+namespace ChatApp.Infrastructure.Contexts
 {
     public class ChatAppDbContext : IdentityDbContext<AppUserEntity, IdentityRole<int>, int>, IChatAppContext
     {
@@ -20,18 +19,14 @@ namespace ChatApp.Data.Contexts
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.Entity<ChatRoomEntity>().HasData(
-               new ChatRoomEntity
-               {
-                   RoomName = "General",
-                   DateCreated = DateTime.UtcNow,
-                   Id = 1001
-               },
-                  new ChatRoomEntity
-                  {
-                      RoomName = "Coding",
-                      DateCreated = DateTime.UtcNow,
-                      Id = 1002
-                  }
+                new ChatRoomEntity("General")
+                {
+                    Id = 1001
+                },
+                new ChatRoomEntity("Coding")
+                {
+                    Id = 1002
+                }
            );
             base.OnModelCreating(builder);
         }

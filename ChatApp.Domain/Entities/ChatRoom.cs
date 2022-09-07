@@ -9,7 +9,7 @@ namespace ChatApp.Domain.Entities
         public int Id { get; set; }
         public string RoomName { get; set; }
         public DateTime DateCreated { get; set; }
-        public List<RoomMessage> Messages { get; set; } = new List<RoomMessage>();
+        public List<RoomMessage>? Messages { get; set; } = new List<RoomMessage>();
    
     }
 }

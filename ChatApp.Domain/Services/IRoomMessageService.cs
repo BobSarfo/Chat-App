@@ -8,5 +8,9 @@ namespace ChatApp.Interfaces
         public Task<List<RoomMessage?>?> GetRoomMessagesByIdAsync(int roomId, int load = 50);
         public Task<List<RoomMessage?>?> GetRoomMessagesByIdAsync(int roomId, int load = 50);
         public Task CreateRoomMessage(int roomId, RoomMessage roomMessage);
+
+
+
+        public Task CreateRoomMessage(int roomId, RoomMessage roomMessage);
     }
 }

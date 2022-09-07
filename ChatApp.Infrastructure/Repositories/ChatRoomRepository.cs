@@ -1,10 +1,12 @@
-using ChatApp.Data.Contexts;
 using ChatApp.Domain.Entities;
 using ChatApp.Domain.Repositories;
+using ChatApp.Infrastructure.Contexts;
+using ChatApp.Infrastructure.Entities;
+using ChatApp.Infrastructure.Extensions;
 
 namespace ChatApp.Infrastructure.Repositories;
 
-public class ChatRoomRepository : BaseRepository<ChatRoom>, IChatRoomRepository
+public class ChatRoomRepository : BaseRepository<ChatRoomEntity>, IChatRoomRepository
 {
     public ChatRoomRepository(ChatAppDbContext context) : base(context)
     {
@@ -13,18 +15,21 @@ public class ChatRoomRepository : BaseRepository<ChatRoom>, IChatRoomRepository
     public async Task<ChatRoom?> GetByRoomNameAsync(string roomName)
     {
         var roomEntity = await Task.FromResult(Find(entity => entity.RoomName == roomName).FirstOrDefault());
-        return roomEntity?.ToChatRoom();
+        
+        return roomEntity is null? null:roomEntity.ToChatRoom();
     }
 
     public async Task<ChatRoom> Add(ChatRoom input)
     {
-        var entity = await SaveAsync(input.FromChatRoom());
+        var entity = await SaveAsync(input.ToChatRoomEntity());
         return entity.ToChatRoom();
     }
 
-    public async Task<List<ChatRoom>> GetRooms()
+    public async Task<List<ChatRoom>?> GetRooms()
     {
-        var entities = await Task.FromResult(GetAll());
+        var entities = await Task.FromResult(GetAll().ToList());
         return entities.ToChatRooms();
     }
+
+   
 }

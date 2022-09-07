@@ -10,20 +10,35 @@ namespace ChatApp.Infrastructure.Extensions
 {
     public static class MessageMapperExtention
     {
-        public static RoomMessage ToRoomMessage(this RoomMessageEntity entity)
+
+
+        
+        public static List<RoomMessage>? ToRoomMessages(this List<RoomMessageEntity> entity)
+        {
+
+            List<RoomMessage> roomMessages = entity.Select(x =>
+            {
+                return x.ToRoomMessage();
+            }).ToList();
+
+            return roomMessages;
+
+        }
+
+        public static RoomMessage ToRoomMessage(this RoomMessageEntity roomMessageEntity)
         {
             return new RoomMessage
             {
-                Id = entity.Id,
-                Message = entity.Message,
-                ChatRoomId = entity.ChatRoomId,
-                IsStockCode = entity.IsStockCode,
-                SenderId = entity.SenderId,
-                SenderUsername = entity.SenderUsername,
-                Timestamp = entity.Timestamp,
+                ChatRoomId = roomMessageEntity.ChatRoomId,
+                Id = roomMessageEntity.Id,
+                IsStockCode = roomMessageEntity.IsStockCode,
+                Message = roomMessageEntity.Message,
+                SenderId = roomMessageEntity.SenderId,
+                SenderUsername = roomMessageEntity.SenderUsername,
+                Timestamp = roomMessageEntity.Timestamp,
             };
-
         }
+
 
         public static RoomMessageEntity ToRoomMessageEntity(this RoomMessage model)
         {
@@ -36,6 +51,12 @@ namespace ChatApp.Infrastructure.Extensions
                 SenderUsername = model.SenderUsername,
                 Timestamp = model.Timestamp,
             };
+
+        }
+
+        public static List<RoomMessageEntity> ToRoomMessagesEntity(this List<RoomMessage> roomMessages)
+        {
+            return roomMessages.Select(x => x.ToRoomMessageEntity()).ToList();
 
         }
     }

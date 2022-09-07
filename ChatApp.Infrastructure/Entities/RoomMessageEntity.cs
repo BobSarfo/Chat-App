@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using ChatApp.Domain.Entities;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ChatApp.Infrastructure.Entities
@@ -17,6 +18,10 @@ namespace ChatApp.Infrastructure.Entities
         [DataType(DataType.Text)]
         public string Message { get; set; }
 
+        internal RoomMessage ToRoomMessage()
+        {
+            throw new NotImplementedException();
+        }
 
         public int ChatRoomId { get; set; }
         public ChatRoomEntity ChatRoom { get; set; }
