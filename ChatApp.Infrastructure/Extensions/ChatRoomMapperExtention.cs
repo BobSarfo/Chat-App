@@ -24,8 +24,9 @@ namespace ChatApp.Infrastructure.Extensions
 
         public static ChatRoomEntity ToChatRoomEntity(this ChatRoom entity)
         {
-            return new ChatRoomEntity(entity.RoomName)
+            return new ChatRoomEntity()
             {
+                RoomName = entity.RoomName,
                 Messages = entity.Messages is null ? new List<RoomMessageEntity>() : entity.Messages.ToRoomMessagesEntity(),              
             };
         }

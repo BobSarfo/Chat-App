@@ -12,11 +12,11 @@ using RabbitMQ.Client;
 using Publisher = Plain.RabbitMQ.Publisher;
 
 var builder = WebApplication.CreateBuilder(args);
-
 // Add services to the container.
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<ChatAppDbContext>(options =>
-    options.UseSqlServer(connectionString));
+    options.UseSqlServer(connectionString, b => b.MigrationsAssembly("ChatApp"))
+    );
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 

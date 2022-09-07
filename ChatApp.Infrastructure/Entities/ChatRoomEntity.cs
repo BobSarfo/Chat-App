@@ -10,14 +10,11 @@ namespace ChatApp.Infrastructure.Entities
         public int Id { get; set; }
 
         [Column(TypeName = "nvarchar(256)")]
-        public string RoomName { get; private set; }
-        public DateTime DateCreated { get; private set; }
+        public string RoomName { get;  set; }
+        public DateTime DateCreated { get; private set; }= DateTime.UtcNow;
 
         public List<RoomMessageEntity> Messages { get; set; } = new List<RoomMessageEntity>();
-        public ChatRoomEntity(string groupName)
-        {
-            RoomName = groupName;
-            DateCreated = DateTime.UtcNow;
-        }
+        
+        public ChatRoomEntity(){}
     }
 }
