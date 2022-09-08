@@ -5,7 +5,7 @@ namespace ChatApp.Domain.Repositories;
 
 public interface IChatRoomRepository : IBaseRepository<ChatRoomEntity> {
 
-    public Task AddMessage(int roomId, Entities.RoomMessageEntity roomMessage);
+    public Task AddMessage(int roomId, RoomMessageEntity roomMessage);
 
-    public Task AddMessage(string roomName, Entities.RoomMessageEntity roomMessage);
+    public Task AddMessage(string roomName, RoomMessageEntity roomMessage);
 }

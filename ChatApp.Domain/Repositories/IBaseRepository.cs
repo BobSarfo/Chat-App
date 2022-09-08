@@ -11,8 +11,8 @@ public interface IBaseRepository<TEntity> where TEntity : class
 
 
 
-    Task AddRangeAsync(IEnumerable<TEntity> entities);
-    Task AddAsync(TEntity entity);
+    void AddRange(IEnumerable<TEntity> entities);
+    void Add(TEntity entity);
 
 
     void Remove(TEntity entity);

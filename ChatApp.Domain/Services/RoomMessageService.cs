@@ -23,7 +23,7 @@ namespace ChatApp.Domain.Services
 
         public async Task CreateRoomMessage(int roomId, RoomMessage roomMessage)
         {
-            await _chatRoomRepository.AddMessage(roomId, roomMessage.ToRoomMessageEntity());
+            _chatRoomRepository.AddMessage(roomId, roomMessage.ToRoomMessageEntity());
             await _uow.CompleteAsync();
         }
 

@@ -35,13 +35,13 @@ public abstract class BaseRepository<TEntity> : IBaseRepository<TEntity> where T
         return await _context.Set<TEntity>().Where(expression).FirstOrDefaultAsync();
     }
 
-    public async Task AddAsync(TEntity entity)
+    public void Add(TEntity entity)
     {
-      await _context.Set<TEntity>().AddAsync(entity);
+      _context.Set<TEntity>().Add(entity);
     }
-    public async Task AddRangeAsync(IEnumerable<TEntity> entities)
+    public void AddRange(IEnumerable<TEntity> entities)
     {
-        await _context.Set<TEntity>().AddRangeAsync(entities);
+        _context.Set<TEntity>().AddRangeAsync(entities);
     }
 
 

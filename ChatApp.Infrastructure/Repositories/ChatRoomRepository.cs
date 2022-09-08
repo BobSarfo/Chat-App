@@ -23,7 +23,7 @@ public class ChatRoomRepository : BaseRepository<ChatRoomEntity>, IChatRoomRepos
         if (foundRoom is not null)
         {
             foundRoom.Messages.Add(roomMessage);
-            await AddAsync(foundRoom);
+            Add(foundRoom);
         }
 
     }
@@ -36,7 +36,7 @@ public class ChatRoomRepository : BaseRepository<ChatRoomEntity>, IChatRoomRepos
         {
 
             foundRoom.Messages.Add(roomMessage);
-            await AddAsync(foundRoom);
+            Add(foundRoom);
         }
     }
 
