@@ -7,6 +7,7 @@ using StockChatBot.Dto;
 using StockChatBot.Models;
 using System;
 using System.Net;
+using System.Runtime.ConstrainedExecution;
 using Xunit;
 
 namespace StockChatBot.Services.Tests
@@ -75,14 +76,14 @@ namespace StockChatBot.Services.Tests
 
             _sut = new StockService(_stockRestClientMock.Object, _loggerMock.Object);
 
-            var stockCode = "";
+            var stockCode = "/stock=app";
 
             _stockRestClientMock.Setup(client => client.GetStocksAsync(stockCode))
            .ReturnsAsync(() => throw new Exception("something wrong"));
 
             var requestTobot = new RequestToStockBotDto
             {
-                Message = "",
+                Message = stockCode,
                 ChatRoomName = "",
                 ChatRoomId = 0,
                 RecieverConnectionId = "",
@@ -105,7 +106,7 @@ namespace StockChatBot.Services.Tests
             _sut = new StockService(_stockRestClientMock.Object, _loggerMock.Object);
             _sut = new StockService(_stockRestClientMock.Object, _loggerMock.Object);
 
-            var stockCode = "TTTX";
+            var stockCode = "/stock=TTTX";
             _stockRestClientMock.Setup(client => client.GetStocksAsync(It.IsAny<string>()))
                  .ReturnsAsync(() => new List<Stock>
                  {
@@ -122,7 +123,7 @@ namespace StockChatBot.Services.Tests
 
             var requestTobot = new RequestToStockBotDto
             {
-                Message="",
+                Message= stockCode,
             };
 
             var response = await _sut.BotRequestHandler(requestTobot);
@@ -139,7 +140,7 @@ namespace StockChatBot.Services.Tests
             _sut = new StockService(_stockRestClientMock.Object, _loggerMock.Object);
             _sut = new StockService(_stockRestClientMock.Object, _loggerMock.Object);
 
-            var stockCode = "TTTX";
+            var stockCode = "/stock=TTTX";
             
             
             _stockRestClientMock.Setup(client => client.GetStocksAsync(It.IsAny<string>()))
@@ -147,12 +148,12 @@ namespace StockChatBot.Services.Tests
 
             var requestTobot = new RequestToStockBotDto
             {
-                Message = "",
+                Message = stockCode,
             };
 
             var response = await _sut.BotRequestHandler(requestTobot);
 
-            var expectErrorMessage = "Error in code sent, command start with: /stock= .Try again";
+            var expectErrorMessage = "No Information Found";
 
             response.ErrorMessage.Should().NotBeNull();
             response.ErrorMessage.Should().Be(expectErrorMessage);
@@ -164,7 +165,7 @@ namespace StockChatBot.Services.Tests
         {
             _sut = new StockService(_stockRestClientMock.Object, _loggerMock.Object);
 
-            var stockCode = "aapl.us";
+            var stockCode = "/stock=aapl.us";
             var expectedReturnedStockCode = "AAPL.US";
             _stockRestClientMock.Setup(client => client.GetStocksAsync(It.IsAny<string>()))
                 .ReturnsAsync(() => new List<Stock>
@@ -182,7 +183,7 @@ namespace StockChatBot.Services.Tests
 
             var requestTobot = new RequestToStockBotDto
             {
-                Message = "aapl.us",
+                Message = stockCode,
                 ChatRoomName = "",
                 ChatRoomId = 0,
                 RecieverConnectionId = "",
