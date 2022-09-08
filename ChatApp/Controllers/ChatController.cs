@@ -107,12 +107,11 @@ namespace ChatApp.Controllers
 
                 
                 if (MessageActionService.IsBotMessage(createRoomMessage.Message))
-                {
-                    var stockCode = MessageActionService.GetStockCodeFromMessage(createRoomMessage.Message);
+                {                   
                     var request = new RequestToStockBotDto
                     {
                         ChatRoomName = connectedUser.SelectedRoomName,
-                        Message = stockCode,
+                        Message = createRoomMessage.Message,
                         IsRoomMessage = true,
                         ChatRoomId = createRoomMessage.RoomId
                     };

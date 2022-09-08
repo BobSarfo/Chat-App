@@ -35,7 +35,7 @@ namespace StockChatBot.Services
                 SenderConnectionId = request.SenderConnectionId,
             };
 
-            if (request.Message is null)
+            if (string.IsNullOrEmpty(request.Message))
             {
                 result.ErrorMessage = "No Stock Code";
                 result.IsSuccess = false;
@@ -55,7 +55,7 @@ namespace StockChatBot.Services
 
             try
             {
-                stocks = await GetStockByCodeAsync(request.Message);
+                stocks = await GetStockByCodeAsync(GetStockCodeFromMessage(request.Message));
             }
             catch (Exception ex)
             {
@@ -98,6 +98,11 @@ namespace StockChatBot.Services
             result.IsSuccess = true;
 
             return result;
+        }
+
+        public static string GetStockCodeFromMessage(string message)
+        {
+            return message.Split("=")[1];
         }
     }
 }

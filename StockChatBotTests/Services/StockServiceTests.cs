@@ -152,7 +152,7 @@ namespace StockChatBot.Services.Tests
 
             var response = await _sut.BotRequestHandler(requestTobot);
 
-            var expectErrorMessage = "No Information Found";
+            var expectErrorMessage = "Error in code sent, command start with: /stock= .Try again";
 
             response.ErrorMessage.Should().NotBeNull();
             response.ErrorMessage.Should().Be(expectErrorMessage);

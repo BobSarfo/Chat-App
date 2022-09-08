@@ -8,9 +8,5 @@
             return message.StartsWith(stockFormat);
         }
 
-        public static string GetStockCodeFromMessage(string message) 
-        {
-            return message.Split("=")[1];
-        }
     }
 }
