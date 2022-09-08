@@ -1,4 +1,5 @@
-﻿using ChatApp.Domain.Services;
+﻿using ChatApp.Domain.Repositories;
+using ChatApp.Domain.Services;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace ChatApp.Domain.Config

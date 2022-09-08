@@ -16,9 +16,8 @@ namespace ChatApp.Domain.Services
         }
         public async Task<string?> UpdateUserChatRoom(int chatRoomId, string userName)
         {
-            var chatRooms = await _chatRoomRepository.GetRooms();
+            var foundRoom = (await _chatRoomRepository.FindSingleAsync(x=>x.Id==chatRoomId)).ToChatRoom();
 
-            var foundRoom = chatRooms?.FirstOrDefault(x => x.Id == chatRoomId);
             if (foundRoom is not null && _connections.Count > 0)
             {
                 var userHubConnectionId = _connections.GetConnectionStringByUserName(userName);

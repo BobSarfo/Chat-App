@@ -11,6 +11,6 @@ namespace ChatApp.Domain.Repositories
         IChatRoomRepository ChatRoom { get; }
         IRoomMessageRepository RoomMessage { get; }
 
-        public Task<int> Complete();
+        public Task<int> CompleteAsync();
     }
 }

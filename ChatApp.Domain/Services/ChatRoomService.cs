@@ -1,4 +1,5 @@
-﻿using ChatApp.Domain.Models;
+﻿using ChatApp.Domain.Extensions;
+using ChatApp.Domain.Models;
 using ChatApp.Domain.Repositories;
 using System;
 using System.Collections.Generic;

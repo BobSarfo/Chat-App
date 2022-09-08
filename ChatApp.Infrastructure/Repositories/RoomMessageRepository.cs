@@ -16,14 +16,14 @@ public class RoomMessageRepository :  BaseRepository<Domain.Entities.RoomMessage
         _db = context;
     }
 
-    public async Task<List<Domain.Entities.RoomMessageEntity>?> GetRecentMessages(int roomId, int load = 50)
+    public async Task<List<RoomMessageEntity>?> GetRecentMessages(int roomId, int load = 50)
     {
-        return await _db.RoomMessages.Include(x => x.ChatRoomId == roomId)
+        return await _db.RoomMessages.Where(x => x.ChatRoomId == roomId)
             .OrderByDescending(x => x.Timestamp).Take(load).ToListAsync();
         
     }
 
-    public async Task<List<Domain.Entities.RoomMessageEntity>?> GetRecentMessages(string roomName, int load = 50)
+    public async Task<List<RoomMessageEntity>?> GetRecentMessages(string roomName, int load = 50)
     {
         return await _db.RoomMessages.Include(x=>x.ChatRoom.RoomName.ToLower().Equals(roomName.ToLower()))
             .OrderByDescending(x=>x.Timestamp).Take(load).ToListAsync();

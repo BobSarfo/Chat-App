@@ -39,7 +39,7 @@ namespace ChatApp.Controllers
         public async Task<IActionResult> ChatRoom(int id=-1)
         {
             List<ChatRoom> namesOfRooms = new();
-            List<RoomMessageEntity?> roomMessages = new();
+            List<RoomMessage> roomMessages = new();
             var data = new ChatRoomDto { RoomNames = namesOfRooms, RoomMessages = roomMessages };
 
             if (User.Identity is null)
@@ -57,7 +57,7 @@ namespace ChatApp.Controllers
                 
                 var chatRooms = await _chatRoomService.GetAllRooms();
 
-                var foundRoomMessages = await _roomMessageService.GetRoomMessagesByIdAsync(id);
+                var foundRoomMessages = await _roomMessageService.GetRecentRoomMessage(id);
 
                 if (foundRoomMessages is not null)
                 {
@@ -86,7 +86,7 @@ namespace ChatApp.Controllers
 
             var userHubConnectionId = _connections.GetConnectionStringByUserName(User.GetUsername());
 
-            var roomMessage = new RoomMessageEntity
+            var roomMessage = new RoomMessage
             {
                 Message = createRoomMessage.Message,
                 IsStockCode = false,

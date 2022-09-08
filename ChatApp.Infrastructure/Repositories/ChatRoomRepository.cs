@@ -17,12 +17,11 @@ public class ChatRoomRepository : BaseRepository<ChatRoomEntity>, IChatRoomRepos
     }
 
 
-    public async Task AddMessage(int roomId, Domain.Entities.RoomMessageEntity roomMessage)
+    public async Task AddMessage(int roomId, RoomMessageEntity roomMessage)
     {
         var foundRoom = await GetAsync(roomId);
         if (foundRoom is not null)
         {
-
             foundRoom.Messages.Add(roomMessage);
             await AddAsync(foundRoom);
         }
@@ -30,7 +29,7 @@ public class ChatRoomRepository : BaseRepository<ChatRoomEntity>, IChatRoomRepos
     }
  
 
-    public async Task AddMessage(string roomName, Domain.Entities.RoomMessageEntity roomMessage)
+    public async Task AddMessage(string roomName, RoomMessageEntity roomMessage)
     {
         var foundRoom = await FindSingleAsync(x=>x.RoomName.ToLower().Equals(roomName.ToLower()));
         if (foundRoom is not null)

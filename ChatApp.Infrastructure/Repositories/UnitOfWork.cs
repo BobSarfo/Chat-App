@@ -8,7 +8,7 @@ using ChatApp.Infrastructure.Contexts;
 
 namespace ChatApp.Infrastructure.Repositories
 {
-    internal class UnitOfWork : IUnitOfWork
+    public class UnitOfWork : IUnitOfWork
     {
         private readonly ChatAppDbContext _db;
 
@@ -21,7 +21,7 @@ namespace ChatApp.Infrastructure.Repositories
 
         public IRoomMessageRepository RoomMessage =>  new RoomMessageRepository(_db);
 
-        public Task<int> Complete()
+        public Task<int> CompleteAsync()
         {
             return _db.SaveChangesAsync();
         }
