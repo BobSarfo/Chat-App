@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
-namespace ChatApp.Infrastructure.Entities
+namespace ChatApp.Domain.Entities
 {
     public partial class AppUser : IdentityUser<int>
     {

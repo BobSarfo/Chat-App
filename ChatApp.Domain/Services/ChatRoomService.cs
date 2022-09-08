@@ -17,9 +17,9 @@ namespace ChatApp.Domain.Services
             _chatRoomRepository = chatRoomRepository;
         }
 
-        public Task<List<ChatRoom>> GetAllRooms()
+        public async Task<List<ChatRoom>> GetAllRooms()
         {
-            return _chatRoomRepository.GetRooms();
+            return (await _chatRoomRepository.GetAllAsync()).ToChatRooms();
         }
     }
 }

@@ -24,9 +24,15 @@ public abstract class BaseRepository<TEntity> : IBaseRepository<TEntity> where T
         return await _context.Set<TEntity>().ToListAsync();
     }
 
+
     public async Task<IEnumerable<TEntity>> FindAsync(Expression<Func<TEntity, bool>> expression)
     {
         return await _context.Set<TEntity>().Where(expression).ToListAsync();
+    }
+
+    public async Task<TEntity> FindSingleAsync(Expression<Func<TEntity, bool>> expression)
+    {
+        return await _context.Set<TEntity>().Where(expression).FirstOrDefaultAsync();
     }
 
     public async Task AddAsync(TEntity entity)

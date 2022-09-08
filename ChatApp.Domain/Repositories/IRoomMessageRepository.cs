@@ -1,9 +1,10 @@
-﻿using ChatApp.Domain.Models;
+﻿using ChatApp.Domain.Entities;
+using ChatApp.Domain.Models;
 
 namespace ChatApp.Domain.Repositories
 {
-    public interface IRoomMessageRepository
+    public interface IRoomMessageRepository : IBaseRepository<Entities.RoomMessageEntity>
     {
-        public Task<List<RoomMessage>?> GetRecentMessages(ChatRoom room, int load = 50);
+        public Task<List<Entities.RoomMessageEntity>?> GetRecentMessages(int roomId, int load = 50);
     }
 }

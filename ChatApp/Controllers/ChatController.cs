@@ -39,7 +39,7 @@ namespace ChatApp.Controllers
         public async Task<IActionResult> ChatRoom(int id=-1)
         {
             List<ChatRoom> namesOfRooms = new();
-            List<RoomMessage?> roomMessages = new();
+            List<RoomMessageEntity?> roomMessages = new();
             var data = new ChatRoomDto { RoomNames = namesOfRooms, RoomMessages = roomMessages };
 
             if (User.Identity is null)
@@ -86,7 +86,7 @@ namespace ChatApp.Controllers
 
             var userHubConnectionId = _connections.GetConnectionStringByUserName(User.GetUsername());
 
-            var roomMessage = new RoomMessage
+            var roomMessage = new RoomMessageEntity
             {
                 Message = createRoomMessage.Message,
                 IsStockCode = false,

@@ -29,7 +29,7 @@ namespace ChatApp.Services
             var data = JsonConvert.DeserializeObject<ResponseFromStockBotDto>(dto);
 
 
-            var roomMessage = new RoomMessage
+            var roomMessage = new RoomMessageEntity
             {
                 Message = data.Message,
                 IsStockCode = true,

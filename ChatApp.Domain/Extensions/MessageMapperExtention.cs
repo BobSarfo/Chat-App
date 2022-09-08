@@ -1,22 +1,14 @@
-﻿using ChatApp.Domain.Models;
-using ChatApp.Infrastructure.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using ChatApp.Domain.Entities;
+using ChatApp.Domain.Models;
 
-namespace ChatApp.Infrastructure.Extensions
+namespace ChatApp.Domain.Extensions
 {
     public static class MessageMapperExtention
     {
-
-
-        
-        public static List<RoomMessage>? ToRoomMessages(this List<RoomMessageEntity> entity)
+        public static List<Models.RoomMessage>? ToRoomMessages(this List<Entities.RoomMessageEntity> entity)
         {
 
-            List<RoomMessage> roomMessages = entity.Select(x =>
+            List<Models.RoomMessage> roomMessages = entity.Select(x =>
             {
                 return x.ToRoomMessage();
             }).ToList();
@@ -25,9 +17,9 @@ namespace ChatApp.Infrastructure.Extensions
 
         }
 
-        public static RoomMessage ToRoomMessage(this RoomMessageEntity roomMessageEntity)
+        public static Models.RoomMessage ToRoomMessage(this Entities.RoomMessageEntity roomMessageEntity)
         {
-            return new RoomMessage
+            return new Models.RoomMessage
             {
                 ChatRoomId = roomMessageEntity.ChatRoomId,
                 Id = roomMessageEntity.Id,
@@ -40,9 +32,9 @@ namespace ChatApp.Infrastructure.Extensions
         }
 
 
-        public static RoomMessageEntity ToRoomMessageEntity(this RoomMessage model)
+        public static Entities.RoomMessageEntity ToRoomMessageEntity(this Models.RoomMessage model)
         {
-            return new RoomMessageEntity
+            return new Entities.RoomMessageEntity
             {
                 Message = model.Message,
                 ChatRoomId = model.ChatRoomId,
@@ -54,7 +46,7 @@ namespace ChatApp.Infrastructure.Extensions
 
         }
 
-        public static List<RoomMessageEntity> ToRoomMessagesEntity(this List<RoomMessage> roomMessages)
+        public static List<Entities.RoomMessageEntity> ToRoomMessageEntities(this List<Models.RoomMessage> roomMessages)
         {
             return roomMessages.Select(x => x.ToRoomMessageEntity()).ToList();
 

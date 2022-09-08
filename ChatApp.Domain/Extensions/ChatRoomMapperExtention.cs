@@ -1,12 +1,7 @@
-﻿using ChatApp.Domain.Models;
-using ChatApp.Infrastructure.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using ChatApp.Domain.Entities;
+using ChatApp.Domain.Models;
 
-namespace ChatApp.Infrastructure.Extensions
+namespace ChatApp.Domain.Extensions
 {
     public static class ChatRoomMapperExtention
     {
@@ -27,7 +22,7 @@ namespace ChatApp.Infrastructure.Extensions
             return new ChatRoomEntity()
             {
                 RoomName = entity.RoomName,
-                Messages = entity.Messages is null ? new List<RoomMessageEntity>() : entity.Messages.ToRoomMessagesEntity(),              
+                Messages = entity.Messages is null ? new List<RoomMessageEntity>() : entity.Messages.ToRoomMessageEntities()
             };
         }
         public static List<ChatRoom>? ToChatRooms(this List<ChatRoomEntity>? chatRooms)

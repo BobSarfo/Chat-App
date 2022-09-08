@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace ChatApp.Infrastructure.Entities
+namespace ChatApp.Domain.Entities
 {
     public class RoomMessageEntity
     {

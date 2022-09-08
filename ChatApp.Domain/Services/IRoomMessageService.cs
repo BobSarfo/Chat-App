@@ -1,11 +1,11 @@
-﻿using ChatApp.Domain.Models;
+﻿using ChatApp.Domain.Entities;
 
 namespace ChatApp.Domain.Services
 {
     public interface IRoomMessageService
     {
-        public Task<List<RoomMessage>?> GetRoomMessagesByIdAsync(int roomId, int load = 50);
-        public Task CreateRoomMessage(int roomId, RoomMessage roomMessage);
+        public Task<List<RoomMessageEntity>?> GetRoomMessagesByIdAsync(int roomId, int load = 50);
+        public Task CreateRoomMessage(int roomId, RoomMessageEntity roomMessage);
 
     }
 }

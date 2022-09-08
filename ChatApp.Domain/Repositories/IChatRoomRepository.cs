@@ -1,11 +1,11 @@
+using ChatApp.Domain.Entities;
 using ChatApp.Domain.Models;
 
 namespace ChatApp.Domain.Repositories;
 
-public interface IChatRoomRepository {
+public interface IChatRoomRepository : IBaseRepository<ChatRoomEntity> {
 
-    Task<ChatRoom?> GetByRoomNameAsync(string roomName);
-    Task<ChatRoom?> GetByRoomIdAsync(int roomId);
-    Task<ChatRoom> Add(ChatRoom input);
-    Task<List<ChatRoom>> GetRooms();
+    public Task AddMessage(int roomId, Entities.RoomMessageEntity roomMessage);
+
+    public Task AddMessage(string roomName, Entities.RoomMessageEntity roomMessage);
 }

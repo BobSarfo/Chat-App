@@ -8,6 +8,6 @@ namespace ChatApp.Dtos
         public string SelectedRoom { get; set; } = "General";
         public int SelectedRoomId { get; set; } = 1;
 
-        public List<RoomMessage> RoomMessages { get; set; } = new ();
+        public List<RoomMessageEntity> RoomMessages { get; set; } = new ();
     }
 } 

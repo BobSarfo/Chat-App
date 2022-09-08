@@ -1,4 +1,4 @@
-﻿using ChatApp.Infrastructure.Entities;
+﻿using ChatApp.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace ChatApp.Infrastructure.Contexts

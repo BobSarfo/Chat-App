@@ -1,40 +1,33 @@
+using ChatApp.Domain.Entities;
+using ChatApp.Domain.Extensions;
 using ChatApp.Domain.Models;
 using ChatApp.Domain.Repositories;
 using ChatApp.Infrastructure.Contexts;
-using ChatApp.Infrastructure.Entities;
-using ChatApp.Infrastructure.Extensions;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Threading.Tasks;
 
 namespace ChatApp.Infrastructure.Repositories;
 
-public class RoomMessageRepository : BaseRepository<RoomMessageEntity>, IRoomMessageRepository
+public class RoomMessageRepository :  BaseRepository<Domain.Entities.RoomMessageEntity> , IRoomMessageRepository
 {
+    private readonly ChatAppDbContext _db;
+
     public RoomMessageRepository(ChatAppDbContext context) : base(context)
     {
+        _db = context;
     }
 
-    public async Task<RoomMessage> SaveMessageAsync(RoomMessage chatMessage)
+    public async Task<List<Domain.Entities.RoomMessageEntity>?> GetRecentMessages(int roomId, int load = 50)
     {
-        var entity = await SaveAsync(chatMessage.ToRoomMessageEntity());
-        return entity.ToRoomMessage();
+        return await _db.RoomMessages.Include(x => x.ChatRoomId == roomId)
+            .OrderByDescending(x => x.Timestamp).Take(load).ToListAsync();
+        
     }
 
-    public async Task<List<RoomMessage>?> GetRecentMessages(ChatRoom room,int load =50 )
+    public async Task<List<Domain.Entities.RoomMessageEntity>?> GetRecentMessages(string roomName, int load = 50)
     {
-         var foundEntities= await _context.RoomMessages.Where(x => x.ChatRoomId == room.Id).Take(load).ToListAsync();
-
-        return foundEntities.ToRoomMessages();
+        return await _db.RoomMessages.Include(x=>x.ChatRoom.RoomName.ToLower().Equals(roomName.ToLower()))
+            .OrderByDescending(x=>x.Timestamp).Take(load).ToListAsync();
     }
-
-
-    public async Task<List<RoomMessage>?> GetByRoom(ChatRoom chatRoom)
-    {
-        var entity = await Task.FromResult(FindAsync(x => x.Id == chatRoom.Id).ToList());
-        return entity.ToRoomMessages();
-    }
-
 
 
 

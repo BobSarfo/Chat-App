@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace ChatApp.Domain.Repositories
 {
-    internal interface IUnitOfWork
+    public interface IUnitOfWork : IDisposable
     {
         IChatRoomRepository ChatRoom { get; }
         IRoomMessageRepository RoomMessage { get; }
 
-        void Complete();
+        public Task<int> Complete();
     }
 }

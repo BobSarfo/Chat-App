@@ -1,10 +1,10 @@
 using ChatApp.Domain.Config;
+using ChatApp.Domain.Entities;
 using ChatApp.Domain.Models;
 using ChatApp.Dtos;
 using ChatApp.Hubs;
 using ChatApp.Infrastructure.Config;
 using ChatApp.Infrastructure.Contexts;
-using ChatApp.Infrastructure.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;

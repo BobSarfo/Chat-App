@@ -1,41 +1,45 @@
+using ChatApp.Domain.Entities;
+using ChatApp.Domain.Extensions;
 using ChatApp.Domain.Models;
 using ChatApp.Domain.Repositories;
 using ChatApp.Infrastructure.Contexts;
-using ChatApp.Infrastructure.Entities;
-using ChatApp.Infrastructure.Extensions;
+using Microsoft.EntityFrameworkCore;
 
 namespace ChatApp.Infrastructure.Repositories;
 
 public class ChatRoomRepository : BaseRepository<ChatRoomEntity>, IChatRoomRepository
 {
+    private readonly ChatAppDbContext _db;
+
     public ChatRoomRepository(ChatAppDbContext context) : base(context)
     {
+        _db = context;
     }
 
-    public async Task<ChatRoom?> GetByRoomNameAsync(string roomName)
+
+    public async Task AddMessage(int roomId, Domain.Entities.RoomMessageEntity roomMessage)
     {
-        var roomEntity = await Task.FromResult(FindAsync(entity => entity.RoomName == roomName).FirstOrDefault());
-        
-        return roomEntity is null? null:roomEntity.ToChatRoom();
+        var foundRoom = await GetAsync(roomId);
+        if (foundRoom is not null)
+        {
+
+            foundRoom.Messages.Add(roomMessage);
+            await AddAsync(foundRoom);
+        }
+
     }
-    public async Task<ChatRoom?> GetByRoomIdAsync(int roomId)
+ 
+
+    public async Task AddMessage(string roomName, Domain.Entities.RoomMessageEntity roomMessage)
     {
-        var roomEntity = await Task.FromResult(FindAsync(entity => entity.Id == roomId).FirstOrDefault());
-        return roomEntity is null ? null : roomEntity.ToChatRoom();
+        var foundRoom = await FindSingleAsync(x=>x.RoomName.ToLower().Equals(roomName.ToLower()));
+        if (foundRoom is not null)
+        {
 
+            foundRoom.Messages.Add(roomMessage);
+            await AddAsync(foundRoom);
+        }
     }
 
-    public async Task<ChatRoom> Add(ChatRoom input)
-    {
-        var entity = await SaveAsync(input.ToChatRoomEntity());
-        return entity.ToChatRoom();
-    }
 
-    public async Task<List<ChatRoom>?> GetRooms()
-    {
-        var entities = await Task.FromResult(GetAllAsync().ToList());
-        return entities.ToChatRooms();
-    }
-
-   
 }
