@@ -1,6 +1,5 @@
 ﻿using ChatApp.Domain.Models;
 using ChatApp.Domain.Repositories;
-using ChatApp.Interfaces;
 using System.Collections.Generic;
 
 namespace ChatApp.Domain.Services
@@ -35,7 +34,7 @@ namespace ChatApp.Domain.Services
 
             if (foundroom is not null)
             {
-                List<RoomMessage>? foundMessages = await _roomMessageRespository.GetOrderedMessageWithLimitAsync(foundroom);
+                List<RoomMessage>? foundMessages = await _roomMessageRespository.GetRecentMessages(foundroom);
                 return foundMessages;
             }
             return null;

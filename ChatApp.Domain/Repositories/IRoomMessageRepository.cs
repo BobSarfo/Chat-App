@@ -1,9 +1,9 @@
 ﻿using ChatApp.Domain.Models;
 
-namespace ChatApp.Interfaces
+namespace ChatApp.Domain.Repositories
 {
     public interface IRoomMessageRepository
     {
-        public Task<List<RoomMessage>?> GetOrderedMessageWithLimitAsync(ChatRoom room, int load = 50);
+        public Task<List<RoomMessage>?> GetRecentMessages(ChatRoom room, int load = 50);
     }
 }

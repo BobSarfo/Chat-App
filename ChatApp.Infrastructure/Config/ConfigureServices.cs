@@ -1,7 +1,6 @@
 ﻿using ChatApp.Domain.Repositories;
 using ChatApp.Infrastructure.Repositories;
 using ChatApp.Infrastructure.Services;
-using ChatApp.Interfaces;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.Extensions.DependencyInjection;
 

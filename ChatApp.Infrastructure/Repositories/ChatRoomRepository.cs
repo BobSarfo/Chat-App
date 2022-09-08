@@ -14,13 +14,13 @@ public class ChatRoomRepository : BaseRepository<ChatRoomEntity>, IChatRoomRepos
 
     public async Task<ChatRoom?> GetByRoomNameAsync(string roomName)
     {
-        var roomEntity = await Task.FromResult(Find(entity => entity.RoomName == roomName).FirstOrDefault());
+        var roomEntity = await Task.FromResult(FindAsync(entity => entity.RoomName == roomName).FirstOrDefault());
         
         return roomEntity is null? null:roomEntity.ToChatRoom();
     }
     public async Task<ChatRoom?> GetByRoomIdAsync(int roomId)
     {
-        var roomEntity = await Task.FromResult(Find(entity => entity.Id == roomId).FirstOrDefault());
+        var roomEntity = await Task.FromResult(FindAsync(entity => entity.Id == roomId).FirstOrDefault());
         return roomEntity is null ? null : roomEntity.ToChatRoom();
 
     }
@@ -33,7 +33,7 @@ public class ChatRoomRepository : BaseRepository<ChatRoomEntity>, IChatRoomRepos
 
     public async Task<List<ChatRoom>?> GetRooms()
     {
-        var entities = await Task.FromResult(GetAll().ToList());
+        var entities = await Task.FromResult(GetAllAsync().ToList());
         return entities.ToChatRooms();
     }
 

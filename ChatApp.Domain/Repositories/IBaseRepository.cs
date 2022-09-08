@@ -4,12 +4,15 @@ namespace ChatApp.Domain.Repositories;
 
 public interface IBaseRepository<TEntity> where TEntity : class
 {
-    IEnumerable<TEntity> GetAll();
-    IEnumerable<TEntity> Find(Expression<Func<TEntity, bool>> expression);
+    Task<TEntity> GetAsync(int id);
+    Task<IEnumerable<TEntity>> GetAllAsync();
+    Task<IEnumerable<TEntity>> FindAsync(Expression<Func<TEntity, bool>> expression);
 
-    Task<TEntity> SaveAsync(TEntity entity);
+    
+    Task AddRangeAsync(IEnumerable<TEntity> entities);
+    Task AddAsync(TEntity entity);
 
-    ValueTask<TEntity?> GetByIdAsync(Guid id);
 
-    Task RemoveAsync(TEntity entity);
+    void Remove(TEntity entity);
+    void RemoveRange(IEnumerable<TEntity> entities);
 }

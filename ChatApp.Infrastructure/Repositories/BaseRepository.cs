@@ -1,5 +1,6 @@
 using ChatApp.Domain.Repositories;
 using ChatApp.Infrastructure.Contexts;
+using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
 namespace ChatApp.Infrastructure.Repositories;
@@ -13,32 +14,40 @@ public abstract class BaseRepository<TEntity> : IBaseRepository<TEntity> where T
         _context = context;
     }
 
-
-    public IEnumerable<TEntity> GetAll()
+    public async Task<TEntity> GetAsync(int id)
     {
-        return _context.Set<TEntity>().ToList();
+        return await _context.Set<TEntity>().FindAsync(id);
     }
 
-    public IEnumerable<TEntity> Find(Expression<Func<TEntity, bool>> expression)
+    public async Task<IEnumerable<TEntity>> GetAllAsync()
     {
-        return _context.Set<TEntity>().Where(expression);
+        return await _context.Set<TEntity>().ToListAsync();
     }
 
-    public async Task<TEntity> SaveAsync(TEntity entity)
+    public async Task<IEnumerable<TEntity>> FindAsync(Expression<Func<TEntity, bool>> expression)
     {
-        var entity1 = _context.Set<TEntity>().Add(entity).Entity;
-        await _context.SaveChangesAsync();
-        return entity1;
+        return await _context.Set<TEntity>().Where(expression).ToListAsync();
     }
 
-    public ValueTask<TEntity?> GetByIdAsync(Guid id)
+    public async Task AddAsync(TEntity entity)
     {
-        return _context.Set<TEntity>().FindAsync(id);
+      await _context.Set<TEntity>().AddAsync(entity);
+    }
+    public async Task AddRangeAsync(IEnumerable<TEntity> entities)
+    {
+        await _context.Set<TEntity>().AddRangeAsync(entities);
     }
 
-    public async Task RemoveAsync(TEntity entity)
+
+    public void Remove(TEntity entity)
     {
         _context.Set<TEntity>().Remove(entity);
-        await _context.SaveChangesAsync();
     }
+
+    public void RemoveRange(IEnumerable<TEntity> entities)
+    {
+        _context.Set<TEntity>().RemoveRange(entities);
+    }
+
+
 }

@@ -1,8 +1,8 @@
 using ChatApp.Domain.Models;
+using ChatApp.Domain.Repositories;
 using ChatApp.Infrastructure.Contexts;
 using ChatApp.Infrastructure.Entities;
 using ChatApp.Infrastructure.Extensions;
-using ChatApp.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Threading.Tasks;
@@ -21,7 +21,7 @@ public class RoomMessageRepository : BaseRepository<RoomMessageEntity>, IRoomMes
         return entity.ToRoomMessage();
     }
 
-    public async Task<List<RoomMessage>?> GetOrderedMessageWithLimitAsync(ChatRoom room,int load =50 )
+    public async Task<List<RoomMessage>?> GetRecentMessages(ChatRoom room,int load =50 )
     {
          var foundEntities= await _context.RoomMessages.Where(x => x.ChatRoomId == room.Id).Take(load).ToListAsync();
 
@@ -31,7 +31,7 @@ public class RoomMessageRepository : BaseRepository<RoomMessageEntity>, IRoomMes
 
     public async Task<List<RoomMessage>?> GetByRoom(ChatRoom chatRoom)
     {
-        var entity = await Task.FromResult(Find(x => x.Id == chatRoom.Id).ToList());
+        var entity = await Task.FromResult(FindAsync(x => x.Id == chatRoom.Id).ToList());
         return entity.ToRoomMessages();
     }
 
