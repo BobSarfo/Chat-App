@@ -128,7 +128,9 @@ else
             $('input:text').keypress(function(e) {
                 if (e.which == 13) {
                     let inputVal = $('input:text').val()
-                    SendMessage(inputVal)
+                    if(inputVal.length>0){
+                        SendMessage(inputVal);
+                    }
                     $('input:text').val("")
                 }
             })
