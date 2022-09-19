@@ -8,7 +8,7 @@ namespace ChatApp.Interfaces
         public Task<bool> AddChatRoomAsync(string chatRoomName);
         public Task<bool> RemoveChatRoomAsync(string chatRoomName);
         public Task<List<ChatRoom>?> GetAllChatRoomsAsync();
-        public Task<string?> UpdateOnlineUserChatRoom(int chatRoomId, string userName);
+        public Task<string?> UpdateOnlineUserChatRoom(int chatRoomId, int userName);
 
     }
 }

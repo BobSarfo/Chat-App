@@ -1,76 +1,112 @@
 ﻿using chat_application.Extensions;
 using ChatApp.Dtos;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.EntityFrameworkCore;
 using System;
 
 namespace ChatApp.Hubs
 {
     public class MessageHub : Hub
     {
-        private readonly IDictionary<string, ConnectedUserDto> _connections;
+        private readonly IDictionary<int, ConnectedUserModel> _connections;
 
-        public MessageHub(IDictionary<string, ConnectedUserDto> connections)
+        public MessageHub(IDictionary<int, ConnectedUserModel> connections)
         {
             _connections = connections;
         }
-        public override Task OnConnectedAsync()
+        public override async Task OnConnectedAsync()
         {
-            var connectedUser = new ConnectedUserDto
+            var username = Context.User.GetUsername();
+            var userId = Context.User.GetUserId();
+
+
+
+            if (!_connections.TryGetValue(userId, out var connectedUserModel))
             {
-                ConnectionId = Context.ConnectionId,
-                UserName = Context.User.GetUsername(),
-                UserId = Context.User.GetUserId(),
-                SelectedRoomName = "General"
-            };
-            
-            _connections.TryAdd(Context.ConnectionId, connectedUser);
+                var connectedUser = new ConnectedUserModel
+                {
+                    ConnectionIds = new List<string> { Context.ConnectionId },
+                    UserName = username,
+                    UserId = userId,
+                    CurrentRoomName = "General"
+                };
 
-            AddToRoom(connectedUser);
+                _connections.TryAdd(userId, connectedUser);
+                await AddToRoom(connectedUser);
+            }
+            else
+            {
+                connectedUserModel.ConnectionIds.Add(Context.ConnectionId);
+               await AddToRoom(connectedUserModel);
 
-            Clients.All.SendAsync("UsersOnline", GetAllConnectedUsers());
-           
-            return base.OnConnectedAsync();
+            }
+
+
+           await base.OnConnectedAsync();
         }
 
 
         public override Task OnDisconnectedAsync(Exception? exception)
         {
-            _connections.Remove(Context.ConnectionId);
+            var userId = Context.User.GetUserId();
+
+            if (!_connections.TryGetValue(userId, out var connectedUserModel))
+            {
+                connectedUserModel.ConnectionIds.Remove(Context.ConnectionId);
+            }
+
             return base.OnDisconnectedAsync(exception);
         }
 
 
-        public List<ConnectedUserDto> GetAllConnectedUsers() => _connections.Values.ToList();
+        public List<ConnectedUserModel> GetAllConnectedUsers() => _connections.Values.ToList();
 
 
         //sample caller codes
         public async Task SendMessageToRoom(string message)
         {
-            if (_connections.TryGetValue(Context.ConnectionId, out ConnectedUserDto connectedUser))
-            {
-                await Clients.Group(connectedUser.SelectedRoomName).SendAsync("ReceiveGroupMessage", message, connectedUser);
+            var userId = Context.UserIdentifier;
+            Clients.Users(userId, message);
+            //var userId = Context.User.GetUserId();
 
+            //if (_connections.TryGetValue(userId, out ConnectedUserModel connectedUser))
+            //{
+            //    await Clients.Group(connectedUser.CurrentRoomName).SendAsync("ReceiveGroupMessage", message, connectedUser);
+
+            //}
+        }
+
+        public async Task SendMessageToUser(string message, int senderUserId, int receiverUserId)
+        {
+            var userId = Context.User.GetUserId();
+
+            if (_connections.ContainsKey(userId))
+            {
+                
+                await Clients.User(userId.ToString()).SendAsync("ReceiveUserMessage", message);
             }
         }
 
-        public async Task SendMessageToUser(string message, string connectionId)
+        public async Task JoinRoom(string roomName)
         {
-            if (_connections.ContainsKey(connectionId))
-            {
-                await Clients.Clients(connectionId, Context.ConnectionId).SendAsync("ReceiveUserMessage", message);
-            }
+            await Groups.AddToGroupAsync(Context.ConnectionId, roomName);
         }
 
-        public void AddToRoom(ConnectedUserDto connectedUser)
+        public async Task LeaveRoom(string roomName)
         {
-            //room , username
-             Groups.AddToGroupAsync(Context.ConnectionId, connectedUser.SelectedRoomName);
-            if (!_connections.ContainsKey(Context.ConnectionId))
+            await Groups.RemoveFromGroupAsync(Context.ConnectionId, roomName);
+        }
+
+        public async Task AddToRoom(ConnectedUserModel connectedUser)
+        {
+            await JoinRoom(connectedUser.CurrentRoomName);
+
+            if (!_connections.ContainsKey(connectedUser.UserId))
             {
-                _connections.Add(Context.ConnectionId, connectedUser);
+                _connections.Add(connectedUser.UserId, connectedUser);
             }
 
-            Clients.Group(connectedUser.SelectedRoomName).SendAsync("ReceiveGroupMember",$"{connectedUser.UserName} joined room");
+            await Clients.Group(connectedUser.CurrentRoomName).SendAsync("ReceiveGroupMember", $"{connectedUser.UserName} joined room");
         }
     }
 }

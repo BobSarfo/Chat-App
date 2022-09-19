@@ -19,13 +19,13 @@ namespace ChatApp.Controllers
         private readonly IRoomMessageService _roomMessageService;
         private readonly IHubContext<MessageHub> _messageHub;
         private readonly IPublisher _publisher;
-        private readonly IDictionary<string, ConnectedUserDto> _connections;
+        private readonly IDictionary<int, ConnectedUserModel> _connections;
 
         public ChatController(IChatRoomService chatRoomService,
             IRoomMessageService roomMessageService,
             IHubContext<MessageHub> messageHub,
             IPublisher publisher,
-            IDictionary<string, ConnectedUserDto> connections)
+            IDictionary<int, ConnectedUserModel> connections)
         {
             _chatRoomService = chatRoomService;
             _roomMessageService = roomMessageService;
@@ -38,6 +38,7 @@ namespace ChatApp.Controllers
         {
             List<ChatRoom> namesOfRooms = new();
             List<RoomMessage?> roomMessages = new();
+
             var data = new ChatRoomDto { RoomNames = namesOfRooms, RoomMessages = roomMessages };
 
             if (User.Identity is null)
@@ -50,8 +51,9 @@ namespace ChatApp.Controllers
                 if (id == -1) id = defaultSeededRoomId; 
 
                 data.SelectedRoomId = id;
-                if(User.GetUsername() is not null);
-                    data.SelectedRoom = await _chatRoomService.UpdateOnlineUserChatRoom(id,User.GetUsername()) ?? data.SelectedRoom;
+
+                if(User.GetUsername() is not null)
+                    data.SelectedRoom = await _chatRoomService.UpdateOnlineUserChatRoom(id,User.GetUserId()) ?? data.SelectedRoom;
                 
                 var chatRooms = await _chatRoomService.GetAllChatRoomsAsync();
                 var foundRoomMessages = await _roomMessageService.GetRoomMessagesByIdAsync(id);
@@ -91,13 +93,13 @@ namespace ChatApp.Controllers
 
             
 
-            if (userHubConnectionId is not null && _connections.TryGetValue(userHubConnectionId, out ConnectedUserDto connectedUser))
+            if (userHubConnectionId is not null && _connections.TryGetValue(User.GetUserId(), out ConnectedUserModel connectedUser))
             {
                 roomMessage.SenderId = connectedUser.UserId;
                 roomMessage.SenderUsername = connectedUser.UserName;
 
 
-                await _messageHub.Clients.Group(connectedUser.SelectedRoomName)
+                await _messageHub.Clients.Group(connectedUser.CurrentRoomName)
                     .SendAsync("ReceiveGroupMessage", new
                     {
                         message = roomMessage.Message,
@@ -110,7 +112,7 @@ namespace ChatApp.Controllers
                 {                   
                     var request = new RequestToStockBotDto
                     {
-                        ChatRoomName = connectedUser.SelectedRoomName,
+                        ChatRoomName = connectedUser.CurrentRoomName,
                         Message = createRoomMessage.Message,
                         IsRoomMessage = true,
                         ChatRoomId = createRoomMessage.RoomId
